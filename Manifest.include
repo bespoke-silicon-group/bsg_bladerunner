@@ -1,0 +1,4 @@
+DEPENDENCIES := \
+    bsg_manycore "deadbeef" \
+    bsg_f1       "cafefeed" \
+    bsg_ip_cores "ba5eba11"
