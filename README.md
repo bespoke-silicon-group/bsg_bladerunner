@@ -20,6 +20,6 @@ infrastructure.
 `Makefile` provides an interface for managing repositories and building new
 images for Amazon F1
 
-`Manifest.include` denotes what commits on repositories constitute this
-release as `REPO_NAME := "commit_hash"`
+`Makefile.deps` denotes what commits on repositories constitute this
+release as `REPO_NAME := commit_hash`
 

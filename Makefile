@@ -29,3 +29,6 @@ build-ami:
 build-agti:
 
 build:
+
+clean:
+	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
