@@ -1,4 +1,5 @@
-DEPENDENCIES := \
-    bsg_manycore "deadbeef" \
-    bsg_f1       "cafefeed" \
-    bsg_ip_cores "ba5eba11"
+DEPENDENCIES := bsg_manycore bsg_f1 bsg_ip_cores
+
+BSG_MANYCORE_HASH := deadbeef
+BSG_F1_HASH       := cafef00d
+BSG_IP_CORES_HASH := ba5eba11
