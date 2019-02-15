@@ -1,5 +1,5 @@
 
-include Manifest.include
+include Makefile.deps
 
 .PHONY: checkout-repos
 all: checkout-repos
