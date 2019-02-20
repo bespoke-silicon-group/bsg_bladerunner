@@ -1,3 +1,5 @@
+AWS_FPGA_VERSION := 1.4.7
+
 DEPENDENCIES := bsg_manycore bsg_f1 bsg_ip_cores
 
 BSG_MANYCORE_HASH := deadbeef

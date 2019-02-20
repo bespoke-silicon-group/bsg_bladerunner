@@ -37,7 +37,8 @@ checkout-repos: $(call repo-list)
 build-ami: checkout-repos
 	$(BSG_F1_PATH)/scripts/build/build.py \
 	    $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) \
-	    -b $(BUILD_PATH)
+	    -b $(BUILD_PATH) \
+	    -v $(AWS_FPGA_VERSION)
 
 build-agti:
 
