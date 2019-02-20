@@ -35,7 +35,9 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 checkout-repos: $(call repo-list)
 
 build-ami: checkout-repos
-	$(BSG_F1_PATH)/scripts/build/build.py $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) -b $(BUILD_PATH)
+	$(BSG_F1_PATH)/scripts/build/build.py \
+	    $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) \
+	    -b $(BUILD_PATH)
 
 build-agti:
 
