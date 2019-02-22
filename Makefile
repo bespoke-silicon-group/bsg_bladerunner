@@ -1,11 +1,12 @@
 
 include Makefile.deps
 
-.PHONY: checkout-repos build-ami
+.PHONY: checkout-repos build-dcp upload-agfi build-ami 
 all: build-ami
 
 BUILD_PATH := $(shell pwd)
-
+DESIGN_NAME := manycore
+BUCKET_NAME := manycore-autogen
 # Get the hash associated with $(1) in Makefile.deps.
 # hash(bsg_manycore) returns the git commit hash for bsg_manycore
 define hash
@@ -21,7 +22,7 @@ endef
 # Each of the repos (and resulting directories) is named
 # "<repo>@<commit_hash>". The rule for each clones the repo into the
 # directory named with the commit hash and resets to the commit pointed
-# to by the has.
+# to by the hash.
 define nested-rule
 $(1)_$(call hash,$(1)):
 	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1)) 
@@ -35,11 +36,16 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 checkout-repos: $(call repo-list)
 
 build-ami: checkout-repos
-	$(BSG_F1_PATH)/scripts/build/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
+	$(BSG_F1_PATH)/scripts/amibuild/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
 	    $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) \
 	    -d
+build-dcp:
+	make -C $(BSG_F1_PATH)/cl_$(DESIGN_NAME)/ clean build
 
-build-agti:
+upload-agfi:
+	$(BSG_F1_PATH)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
+	    $(FPGA_IMAGE_VERSION) $(BSG_F1_PATH)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/19_02_13-185634.Developer_CL.tar \
+	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) -d
 
 build:
 

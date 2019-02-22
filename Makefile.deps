@@ -1,3 +1,4 @@
+FPGA_IMAGE_VERSION := 0.1
 AWS_FPGA_VERSION := 1.4.5
 
 DEPENDENCIES := bsg_manycore bsg_f1 bsg_ip_cores
