@@ -23,6 +23,7 @@ endef
 # "<repo>@<commit_hash>". The rule for each clones the repo into the
 # directory named with the commit hash and resets to the commit pointed
 # to by the hash.
+# Also, define <repo_name>_PATH as a variable
 define nested-rule
 $(shell echo $(1) | tr [:lower:] [:upper:])_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
 
