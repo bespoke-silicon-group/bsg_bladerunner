@@ -24,8 +24,8 @@ endef
 # to by the has.
 define nested-rule
 $(1)_$(call hash,$(1)):
-	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
-	cd $(BUILD_PATH)/$(1)@$(call hash,$(1)) && git reset --hard $(call hash,$(1))
+	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1)) 
+	cd $(BUILD_PATH)/$(1)@$(call hash,$(1)) && git checkout $(call hash,$(1))
 	export $(shell echo $(1) | tr [:lower:] [:upper:])_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
 endef
 
@@ -35,10 +35,9 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 checkout-repos: $(call repo-list)
 
 build-ami: checkout-repos
-	$(BSG_F1_PATH)/scripts/build/build.py \
+	$(BSG_F1_PATH)/scripts/build/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
 	    $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) \
-	    -b $(BUILD_PATH) \
-	    -v $(AWS_FPGA_VERSION)
+	    -d
 
 build-agti:
 
