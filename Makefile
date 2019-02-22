@@ -45,7 +45,7 @@ checkout-repos: $(call repo-list)
 
 build-ami: checkout-repos
 	$(BSG_F1_PATH)/scripts/amibuild/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
-	    $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) \
+	    $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo))) \
 	    -d
 build-dcp:
 	make -C $(BSG_F1_PATH)/cl_$(DESIGN_NAME)/ clean build
@@ -53,7 +53,7 @@ build-dcp:
 upload-agfi:
 	$(BSG_F1_PATH)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
 	    $(FPGA_IMAGE_VERSION) $(BSG_F1_PATH)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/19_02_13-185634.Developer_CL.tar \
-	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(BUILD_PATH)/$(repo)@$(call hash,$(repo))) -d
+	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo))) -d
 
 build:
 
