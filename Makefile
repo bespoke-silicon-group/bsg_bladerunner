@@ -7,11 +7,17 @@ all: build-ami
 BUILD_PATH := $(shell pwd)
 DESIGN_NAME := manycore
 BUCKET_NAME := manycore-autogen
+
+define upper
+$(shell echo $(1) | tr [:lower:] [:upper:])
+endef
+
 # Get the hash associated with $(1) in Makefile.deps.
 # hash(bsg_manycore) returns the git commit hash for bsg_manycore
 define hash
-$($(shell echo $(1)_HASH | tr [:lower:] [:upper:]))
+$($(call upper,$(1)_HASH))
 endef
+
 
 # Generate a list of the repositories with their commit hashes appended
 define repo-list
@@ -25,9 +31,9 @@ endef
 # to by the hash.
 # Also, define <repo_name>_PATH as a variable
 define nested-rule
-$(shell echo $(1) | tr [:lower:] [:upper:])_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
+export $(call upper, $(1))_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
 
-$(1)_$(call hash,$(1)):
+$(1)@$(call hash,$(1)):
 	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
 	cd $(BUILD_PATH)/$(1)@$(call hash,$(1)) && git checkout $(call hash,$(1))
 endef
