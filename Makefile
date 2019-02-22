@@ -1,7 +1,7 @@
 
 include Makefile.deps
 
-.PHONY: checkout-repos build-dcp upload-agfi build-ami 
+.PHONY: checkout-repos build-dcp upload-agfi build-ami
 all: build-ami
 
 BUILD_PATH := $(shell pwd)
@@ -15,7 +15,7 @@ endef
 
 # Generate a list of the repositories with their commit hashes appended
 define repo-list
-$(foreach dep,$(DEPENDENCIES),$(dep)_$(call hash,$(dep)))
+$(foreach dep,$(DEPENDENCIES),$(dep)@$(call hash,$(dep)))
 endef
 
 # Define a makefile rule for the repo $(1)
@@ -24,10 +24,11 @@ endef
 # directory named with the commit hash and resets to the commit pointed
 # to by the hash.
 define nested-rule
+$(shell echo $(1) | tr [:lower:] [:upper:])_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
+
 $(1)_$(call hash,$(1)):
-	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1)) 
+	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
 	cd $(BUILD_PATH)/$(1)@$(call hash,$(1)) && git checkout $(call hash,$(1))
-	export $(shell echo $(1) | tr [:lower:] [:upper:])_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
 endef
 
 # Generate a Makefile goal for each of the repositories
