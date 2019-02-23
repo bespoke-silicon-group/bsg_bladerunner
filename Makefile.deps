@@ -4,5 +4,5 @@ AWS_FPGA_VERSION := v1.4.5
 DEPENDENCIES := bsg_manycore bsg_f1 bsg_ip_cores
 
 BSG_MANYCORE_HASH := 107dd5a
-BSG_F1_HASH       := 54ca76b
+BSG_F1_HASH       := d17ef50
 BSG_IP_CORES_HASH := ae9c7d8

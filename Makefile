@@ -6,7 +6,7 @@ all: build-ami
 
 BUILD_PATH := $(shell pwd)
 DESIGN_NAME := manycore
-BUCKET_NAME := manycore-autogen
+BUCKET_NAME := bsgamibuild
 
 define upper
 $(shell echo $(1) | tr [:lower:] [:upper:])
@@ -29,9 +29,9 @@ endef
 # "<repo>@<commit_hash>". The rule for each clones the repo into the
 # directory named with the commit hash and resets to the commit pointed
 # to by the hash.
-# Also, define <repo_name>_PATH as a variable
+# Also, define <repo_name>_DIR as a variable
 define nested-rule
-export $(call upper, $(1))_PATH=$(BUILD_PATH)/$(1)@$(call hash, $(1))
+export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)\@$(call hash, $(1))
 
 $(1)@$(call hash,$(1)):
 	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
@@ -43,19 +43,21 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 
 checkout-repos: $(call repo-list)
 
-build-ami: checkout-repos
-	$(BSG_F1_PATH)/scripts/amibuild/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
+build-ami: checkout-repos upload-agfi
+	$(BSG_F1_DIR)/scripts/amibuild/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
 	    $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo))) \
-	    -d
-build-dcp:
-	make -C $(BSG_F1_PATH)/cl_$(DESIGN_NAME)/ clean build
+		-u upload.json
 
-upload-agfi:
-	$(BSG_F1_PATH)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
-	    $(FPGA_IMAGE_VERSION) $(BSG_F1_PATH)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/19_02_13-185634.Developer_CL.tar \
-	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo))) -d
+build-dcp: checkout-repos
+	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build
 
-build:
+upload-agfi: build-dcp upload.json
+
+upload.json:
+	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
+	    $(FPGA_IMAGE_VERSION) $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar \
+	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo)))
 
 clean:
 	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
+	rm -rf upload.json
