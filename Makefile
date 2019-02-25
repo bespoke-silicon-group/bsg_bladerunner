@@ -62,15 +62,17 @@ clean:
 
 
 # AWS Installation Rules
-AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
-$(AWS_FPGA_REPO_DIR):
-	git clone https://github.com/aws/aws-fpga.git $(AWS_FPGA_REPO_DIR)
-	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
-
 update-instance: 
 	sudo yum -y update
 	sudo yum -y clean all
 	sudo yum -y autoremove
+
+AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
+$(AWS_FPGA_REPO_DIR): update-instance
+	git clone https://github.com/aws/aws-fpga.git $(AWS_FPGA_REPO_DIR)
+	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
+	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
+	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh
 
 # TODO: Set permissions
 xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
