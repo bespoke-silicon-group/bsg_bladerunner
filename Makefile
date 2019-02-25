@@ -74,6 +74,11 @@ $(AWS_FPGA_REPO_DIR): update-instance
 	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh
 
+riscv-tools: update-instance
+	sudo yum -y install libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf
+	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools checkout-all
+	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools build-riscv-tools
+
 # TODO: Set permissions
 xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 	make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma
@@ -87,5 +92,5 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 
 setup_env: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh
 
-install: checkout-repos setup_env xdma-driver
+install: checkout-repos setup_env xdma-driver riscv-tools
 	sudo shutdown -h now # Final step
