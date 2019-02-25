@@ -34,7 +34,7 @@ define nested-rule
 export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)\@$(call hash, $(1))
 
 $(1)@$(call hash,$(1)):
-	git clone git@bitbucket.org:taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
+	git clone https://bitbucket.org/taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
 	cd $(BUILD_PATH)/$(1)@$(call hash,$(1)) && git checkout $(call hash,$(1))
 endef
 
@@ -44,9 +44,7 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 checkout-repos: $(call repo-list)
 
 build-ami: checkout-repos upload-agfi
-	$(BSG_F1_DIR)/scripts/amibuild/build.py $(BUILD_PATH) $(AWS_FPGA_VERSION)\
-	    $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo))) \
-		-u upload.json
+	$(BSG_F1_DIR)/scripts/amibuild/build.py bsg_bladerunner_release@master -u upload.json
 
 build-dcp: checkout-repos
 	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build
@@ -61,3 +59,32 @@ upload.json:
 clean:
 	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
 	rm -rf upload.json
+
+
+# AWS Installation Rules
+AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
+
+$(AWS_FPGA_REPO_DIR):
+	git clone https://github.com/aws/aws-fpga.git $(AWS_FPGA_REPO_DIR)
+	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
+
+update-instance: 
+	sudo yum -y update
+	sudo yum -y clean all
+	sudo yum -y autoremove
+
+# TODO: Set permissions
+xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
+	make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma
+	sudo make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma install
+
+/etc/profile.d/agfi.sh:
+	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
+
+/etc/profile.d/profile.d_bsg.sh:
+	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
+
+setup_env: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh
+
+install: checkout-repos setup_env xdma-driver
+	sudo shutdown -h now # Final step
