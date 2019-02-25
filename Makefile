@@ -80,7 +80,7 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 /etc/profile.d/agfi.sh:
 	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
 
-/etc/profile.d/profile.d_bsg.sh: checkout-repos
+/etc/profile.d/profile.d_bsg.sh: $(AWS_FPGA_REPO_DIR) checkout-repos
 	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
 
 setup_env: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh
