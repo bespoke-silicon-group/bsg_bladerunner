@@ -63,7 +63,6 @@ clean:
 
 # AWS Installation Rules
 AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
-
 $(AWS_FPGA_REPO_DIR):
 	git clone https://github.com/aws/aws-fpga.git $(AWS_FPGA_REPO_DIR)
 	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
@@ -81,7 +80,7 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 /etc/profile.d/agfi.sh:
 	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
 
-/etc/profile.d/profile.d_bsg.sh:
+/etc/profile.d/profile.d_bsg.sh: checkout-repos
 	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
 
 setup_env: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh
