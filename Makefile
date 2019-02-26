@@ -21,21 +21,21 @@ endef
 
 # Generate a list of the repositories with their commit hashes appended
 define repo-list
-$(foreach dep,$(DEPENDENCIES),$(dep)@$(call hash,$(dep)))
+$(foreach dep,$(DEPENDENCIES),$(dep)_$(call hash,$(dep)))
 endef
 
 # Define a makefile rule for the repo $(1)
 # Each of the repos (and resulting directories) is named
-# "<repo>@<commit_hash>". The rule for each clones the repo into the
+# "<repo>_<commit_hash>". The rule for each clones the repo into the
 # directory named with the commit hash and resets to the commit pointed
 # to by the hash.
 # Also, define <repo_name>_DIR as a variable
 define nested-rule
-export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)\@$(call hash, $(1))
+export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)\_$(call hash, $(1))
 
-$(1)@$(call hash,$(1)):
-	git clone https://bitbucket.org/taylor-bsg/$(1).git $(BUILD_PATH)/$(1)@$(call hash,$(1))
-	cd $(BUILD_PATH)/$(1)@$(call hash,$(1)) && git checkout $(call hash,$(1))
+$(1)_$(call hash,$(1)):
+	git clone https://bitbucket.org/taylor-bsg/$(1).git $(BUILD_PATH)/$(1)_$(call hash,$(1))
+	cd $(BUILD_PATH)/$(1)_$(call hash,$(1)) && git checkout $(call hash,$(1))
 endef
 
 # Generate a Makefile goal for each of the repositories
