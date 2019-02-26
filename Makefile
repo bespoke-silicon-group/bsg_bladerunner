@@ -73,9 +73,9 @@ $(AWS_FPGA_REPO_DIR):
 	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
 
 riscv-tools: update-instance
-	sudo yum -y install libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf
+	sudo yum -y install libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf expat-devel
 	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools checkout-all
-	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools build-riscv-tools
+	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools build-riscv-tools 2>&1 > build.log
 
 # TODO: Set permissions
 xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
