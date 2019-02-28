@@ -82,6 +82,14 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 	make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma
 	sudo make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma install
 
+bsg-drivers: update-instance $(AWS_FPGA_REPO_DIR)
+	make -C $(BSG_F1_DIR)/libraries
+	sudo make -C $(BSG_F1_DIR)/libraries install
+
+bsg-libraries: bsg-drivers $(AWS_FPGA_REPO_DIR)
+	make -C $(BSG_F1_DIR)/drivers
+	sudo make -C $(BSG_F1_DIR)/drivers install
+
 /etc/profile.d/agfi.sh:
 	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
 
@@ -92,5 +100,5 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 
 setup_env: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh
 
-install: checkout-repos setup_env xdma-driver riscv-tools
+install: checkout-repos setup_env xdma-driver bsg-libraries riscv-tools
 	sudo shutdown -h now # Final step
