@@ -83,12 +83,12 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 	sudo make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma install
 
 bsg-drivers: update-instance $(AWS_FPGA_REPO_DIR)
-	make -C $(BSG_F1_DIR)/libraries
-	sudo make -C $(BSG_F1_DIR)/libraries install
+	make -C $(BSG_F1_DIR)/cl_manycore/libraries
+	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
 
 bsg-libraries: bsg-drivers $(AWS_FPGA_REPO_DIR)
-	make -C $(BSG_F1_DIR)/drivers
-	sudo make -C $(BSG_F1_DIR)/drivers install
+	make -C $(BSG_F1_DIR)/cl_manycore/drivers
+	sudo make -C $(BSG_F1_DIR)/cl_manycore/drivers install
 
 /etc/profile.d/agfi.sh:
 	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
