@@ -60,19 +60,21 @@ clean:
 	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
 	rm -rf upload.json
 
-
 # AWS Installation Rules
-update-instance: 
-	sudo yum -y update
-	sudo yum -y clean all
-	sudo yum -y autoremove
+update-instance: yum.log
+yum.log:
+	echo max_connections=10 | sudo tee -a /etc/yum.conf 
+	sudo yum -y update > yum.log
+	sudo yum -y clean all >> yum.log
+	sudo yum -y autoremove >> yum.log
 
 AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
 $(AWS_FPGA_REPO_DIR): 
 	git clone https://github.com/aws/aws-fpga.git $(AWS_FPGA_REPO_DIR)
 	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
 
-riscv-tools: update-instance
+riscv-tools: update-instance $(BSG_MANYCORE_DIR)/software/riscv-tools/riscv-install/ 
+$(BSG_MANYCORE_DIR)/software/riscv-tools/riscv-install/:
 	sudo yum -y install libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf expat-devel
 	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools checkout-all
 	make -C $(BSG_MANYCORE_DIR)/software/riscv-tools build-riscv-tools 2>&1 > build.log
@@ -83,12 +85,12 @@ xdma-driver: update-instance $(AWS_FPGA_REPO_DIR)
 	sudo make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma install
 
 bsg-drivers: update-instance $(AWS_FPGA_REPO_DIR)
-	make -C $(BSG_F1_DIR)/cl_manycore/libraries
-	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
-
-bsg-libraries: bsg-drivers $(AWS_FPGA_REPO_DIR)
 	make -C $(BSG_F1_DIR)/cl_manycore/drivers
 	sudo make -C $(BSG_F1_DIR)/cl_manycore/drivers install
+
+bsg-libraries: bsg-drivers $(AWS_FPGA_REPO_DIR)
+	make -C $(BSG_F1_DIR)/cl_manycore/libraries
+	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
 
 /etc/profile.d/agfi.sh:
 	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
@@ -102,3 +104,9 @@ setup_env: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh
 
 install: checkout-repos setup_env xdma-driver bsg-libraries riscv-tools
 	sudo shutdown -h now # Final step
+
+clean-ami:
+	make -C $(BSG_F1_DIR)/cl_manycore/libraries uninstall
+	make -C $(BSG_F1_DIR)/cl_manycore/drivers uninstall
+	rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) yum.log
+	rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh}
