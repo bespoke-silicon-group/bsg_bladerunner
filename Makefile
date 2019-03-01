@@ -31,7 +31,7 @@ endef
 # to by the hash.
 # Also, define <repo_name>_DIR as a variable
 define nested-rule
-export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)\_$(call hash, $(1))
+export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)_$(call hash, $(1))
 
 $(1)_$(call hash,$(1)):
 	git clone https://bitbucket.org/taylor-bsg/$(1).git $(BUILD_PATH)/$(1)_$(call hash,$(1))
@@ -108,5 +108,5 @@ install: checkout-repos setup_env xdma-driver bsg-libraries riscv-tools
 clean-ami:
 	make -C $(BSG_F1_DIR)/cl_manycore/libraries uninstall
 	make -C $(BSG_F1_DIR)/cl_manycore/drivers uninstall
-	rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) yum.log
-	rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh}
+	sudo rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) yum.log
+	sudo rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh}
