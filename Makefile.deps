@@ -6,5 +6,5 @@ DEPENDENCIES := bsg_manycore bsg_f1 bsg_ip_cores
 BSG_MANYCORE_HASH := 7e74645
 BSG_F1_HASH       := bae6841
 BSG_IP_CORES_HASH := ae9c7d8
-AGFI_ID := agfi-0e583db89d0ef11dc
-AMI_ID := ami-0fba8c2ff49106933
+AGFI_ID := agfi-087dad34c50a15366
+AMI_ID := ami-087aea61d62eb5846
