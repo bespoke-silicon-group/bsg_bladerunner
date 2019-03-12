@@ -2,7 +2,7 @@
 include Makefile.deps
 
 .PHONY: checkout-repos build-dcp build-ami upload-agfi build-ami clean update-instance riscv-tools llvm-install install
-all: build-ami
+all: build-ami upload-agfi
 
 BUILD_PATH := $(shell pwd)
 DESIGN_NAME := manycore
@@ -43,7 +43,7 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 
 checkout-repos: $(call repo-list)
 
-build-ami: checkout-repos upload-agfi
+build-ami: checkout-repos
 	$(BSG_F1_DIR)/scripts/amibuild/build.py bsg_bladerunner_release@master -u upload.json
 
 build-dcp: checkout-repos
