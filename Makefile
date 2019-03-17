@@ -44,14 +44,14 @@ $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 checkout-repos: $(call repo-list)
 
 build-ami: checkout-repos
-	$(BSG_F1_DIR)/scripts/amibuild/build.py bsg_bladerunner_release@master -u upload.json
+	$(BSG_F1_DIR)/scripts/amibuild/build.py bsg_bladerunner_release@$(RELEASE_BRANCH) $(AMI_ID)
 
 build-dcp: checkout-repos
 	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build
 
 upload-agfi: build-dcp upload.json
 
-upload.json:
+upload.json: build-dcp
 	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
 	    $(FPGA_IMAGE_VERSION) $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar \
 	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo)))
