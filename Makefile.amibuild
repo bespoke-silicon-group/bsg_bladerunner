@@ -1,0 +1,77 @@
+
+include Makefile.common
+
+.PHONY: all update-instance riscv-tools llvm-install install env-install \
+	xdma-install bsg-install help
+
+.DEFAULT_GOAL := all
+all:help
+help:
+	@echo "Usage:"
+	@echo "make {install|clean} "
+	@echo "         install: Install all project dependencies"
+	@echo "         clean: Remove all build files and repositories"
+
+RISCV_DEPS := libmpc autoconf automake libtool curl gmp gawk bison flex \
+	texinfo gperf expat-devel
+# AWS Installation Rules
+update-instance: yum.log
+yum.log: 
+	echo max_connections=10 | sudo tee -a /etc/yum.conf 
+	sudo yum -y update > yum.update.log
+	sudo yum -y install $(RISCV_DEPS) > yum.install.log
+	sudo yum -y clean all > yum.clean.log
+	sudo yum -y autoremove > yum.log
+
+AWS_FPGA_REPO_URL ?= https://github.com/aws/aws-fpga.git
+AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
+$(AWS_FPGA_REPO_DIR): update-instance
+	git clone $(AWS_FPGA_REPO_URL) $(AWS_FPGA_REPO_DIR)
+	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
+
+RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
+RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
+riscv-tools: $(RISCV_INSTALL_DIR)
+$(RISCV_INSTALL_DIR): update-instance
+	make -C $(RISCV_TOOLS_DIR) checkout-all
+	make -C $(RISCV_TOOLS_DIR) build-riscv-tools 2>&1 > build.log
+
+LLVM_DIR := $(BUILD_PATH)/llvm
+llvm-install: riscv-tools
+	make -C $(BSG_MANYCORE_DIR)/software/mk/ -f Makefile.llvminstall LLVM_DIR=$(LLVM_DIR) RISCV_INSTALL_DIR=$(RISCV_INSTALL_DIR)
+
+# TODO: Set permissions
+XDMA_KO_FILE := /lib/modules/$(shell uname -r)/extra/xdma.ko
+xdma-install:$(XDMA_KO_FILE)
+$(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR)
+	make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma
+	sudo make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma install
+
+bsg-install: /usr/lib64/libbsg_manycore_runtime.so.1.0
+/usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR)
+	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/cl_manycore/libraries
+	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
+
+env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile.d/bsg.sh
+
+/etc/profile.d/agfi.sh:
+	@echo "export AGFI=$(AGFI_ID)" | sudo tee $@
+
+/etc/profile.d/bsg.sh:
+	@echo "export BSG_IP_CORES_DIR=$(BSG_IP_CORES_DIR)" | sudo tee $@
+	@echo "export BSG_MANYCORE_DIR=$(BSG_MANYCORE_DIR)" | sudo tee -a $@
+	@echo "export BSG_F1_DIR=$(BSG_F1_DIR)" | sudo tee -a $@
+
+/etc/profile.d/profile.d_bsg.sh: $(AWS_FPGA_REPO_DIR) checkout-repos
+	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
+	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
+	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh
+
+install: update-instance checkout-repos env-install xdma-install bsg-install riscv-tools llvm-install 
+	sudo shutdown -h now # Final step
+
+clean:
+	make -C $(BSG_F1_DIR)/cl_manycore/libraries uninstall
+	sudo rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) 
+	sudo rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh,bsg.sh} *.log
+
