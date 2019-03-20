@@ -2,9 +2,10 @@
 include Makefile.common
 DESIGN_NAME := manycore
 BUCKET_NAME := bsgamibuild
+CORNELL_USER_ID := 238771226843
+UW_USER_ID := 339237448643
 
-
-.PHONY: all build-dcp upload-agfi build-ami clean help
+.PHONY: all build-dcp upload-agfi build-ami clean help share-ami share-afi
 
 .DEFAULT_GOAL := all
 all: help
@@ -33,6 +34,16 @@ upload.json: build-dcp
 	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
 	    $(FPGA_IMAGE_VERSION) $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar \
 	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo)))
+
+share-ami:
+	aws ec2 modify-image-attribute --image-id $(AMI_ID) \
+		--attribute launchPermission --operation-type add \
+		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
+
+share-afi:
+	aws ec2 --region us-west-2 modify-fpga-image-attribute \
+		--fpga-image-id $(AFI_ID) --operation-type add \
+		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
 clean:
 	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
