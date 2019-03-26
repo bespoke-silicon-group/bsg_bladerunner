@@ -12,6 +12,10 @@ define hash
 $($(call upper,$(1)_HASH))
 endef
 
+define remote
+$($(call upper,$(1)_REMOTE))/$(1).git
+endef
+
 
 # Generate a list of the repositories with their commit hashes appended
 define repo-list
@@ -28,7 +32,7 @@ define nested-rule
 export $(call upper, $(1))_DIR=$(BUILD_PATH)/$(1)_$(call hash, $(1))
 
 $(1)_$(call hash,$(1)):
-	git clone https://bitbucket.org/taylor-bsg/$(1).git $(BUILD_PATH)/$(1)_$(call hash,$(1))
+	git clone $(call remote,$(1)) $(BUILD_PATH)/$(1)_$(call hash,$(1))
 	cd $(BUILD_PATH)/$(1)_$(call hash,$(1)) && git checkout $(call hash,$(1))
 endef
 
