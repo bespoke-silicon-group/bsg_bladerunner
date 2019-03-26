@@ -4,9 +4,12 @@ AWS_FPGA_VERSION := v1.4.5
 DEPENDENCIES := bsg_manycore bsg_f1 bsg_ip_cores
 
 RELEASE_BRANCH := 7bff644
-BSG_MANYCORE_HASH := fb8bc92
-BSG_F1_HASH       := a4398d7
-BSG_IP_CORES_HASH := 593f545
+BSG_MANYCORE_HASH   := fb8bc92
+BSG_MANYCORE_REMOTE := git@bitbucket.org:taylor-bsg
+BSG_F1_HASH         := 9fd73fc
+BSG_F1_REMOTE       := git@github.com:bespoke-silicon-group
+BSG_IP_CORES_HASH   := 593f545
+BSG_IP_CORES_REMOTE := git@bitbucket.org:taylor-bsg
 F12XLARGE_TEMPLATE_ID := lt-01bc73811e48f0b26
 AGFI_ID := agfi-073f970145e7fd90b
 AFI_ID := afi-09dc24f4c70e6397d
