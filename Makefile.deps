@@ -13,4 +13,4 @@ BSG_IP_CORES_REMOTE := https://bitbucket.org/taylor-bsg
 F12XLARGE_TEMPLATE_ID := lt-01bc73811e48f0b26
 AGFI_ID := agfi-08feba42f2b614d7f
 AFI_ID := afi-07dcd89c8074e6628
-AMI_ID := ami-005bf145d104041be
+AMI_ID := ami-0ce51e94bbeba2650
