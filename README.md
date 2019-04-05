@@ -1,24 +1,24 @@
 # BSG Bladerunner
 
 This repository tracks releases of the BSG Manycore source code and
-infrastructure. It can be used to: 
+infrastructure. It can be used to:
 
 * Create [Amazon Machine
   Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) with
-  manycore tools and libraries-preinstalled. 
+  manycore tools and libraries-preinstalled.
 
 * Compile and Simulate FPGA Designs using the repositories and git hashes listed
-  in Makefile.deps
+  in `Makefile.deps`
 
 * Generate [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
-  using the repositories and git hashes listed in Makefile.deps. 
+  using the repositories and git hashes listed in `Makefile.deps`.
 
 ## Relevant Makefile targets
 
 * `checkout-repos`: Clone repositories that are needed for building new F1
     images
 
-* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID. 
+* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
 
 * `build-dcp` : Compiles the manycore design (locally) as a Design Checkpoint
   (DCP)
