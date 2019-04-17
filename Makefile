@@ -1,13 +1,13 @@
-
-include Makefile.common
 DESIGN_NAME := manycore
 BUCKET_NAME := bsgamibuild
 CORNELL_USER_ID := 238771226843
 UW_USER_ID := 339237448643
 
+include Makefile.common
+
 .PHONY: all build-dcp upload-agfi build-ami clean help share-ami share-afi
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := help
 all: help
 help:
 	@echo "Usage:"
@@ -31,9 +31,12 @@ build-dcp: checkout-repos
 upload-agfi: build-dcp upload.json
 
 upload.json: build-dcp
+	-include $(BSG_F1_DIR)/cl_manycore/Makefile.dimensions
 	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
-	    $(FPGA_IMAGE_VERSION) $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar \
-	    $(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" $(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo)))
+		$(FPGA_IMAGE_VERSION) $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar \
+		$(BUCKET_NAME) "BSG AWS F1 Manycore AGFI" \
+		$(foreach repo,$(DEPENDENCIES),-r $(repo)@$(call hash,$(repo))) \
+		-c "Version: $(FPGA_IMAGE_VERSION) $(shell cat $(BSG_F1_DIR)/cl_manycore/Makefile.dimensions)"
 
 share-ami:
 	aws ec2 modify-image-attribute --image-id $(AMI_ID) \

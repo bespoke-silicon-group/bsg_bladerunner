@@ -31,6 +31,8 @@ $(1)_$(call hash,$(1)):
 	cd $(BUILD_PATH)/$(1)_$(call hash,$(1)) && git checkout $(call hash,$(1))
 endef
 
+export BSG_IP_CORES_DIR=$(BASEJUMP_STL_DIR)
+
 # Generate a Makefile goal for each of the repositories
 $(foreach dep,$(DEPENDENCIES),$(eval $(call nested-rule,$(dep))))
 
