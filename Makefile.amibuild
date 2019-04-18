@@ -18,10 +18,9 @@ RISCV_DEPS := libmpc autoconf automake libtool curl gmp gawk bison flex \
 update-instance: yum.log
 yum.log: 
 	echo max_connections=10 | sudo tee -a /etc/yum.conf 
-	sudo yum -y update > yum.update.log
-	sudo yum -y install $(RISCV_DEPS) > yum.install.log
-	sudo yum -y clean all > yum.clean.log
-	sudo yum -y autoremove > yum.log
+	sudo yum -y install $(RISCV_DEPS) > yum.log
+	sudo yum -y clean all >> yum.log
+	sudo yum -y autoremove >> yum.log
 
 AWS_FPGA_REPO_URL ?= https://github.com/aws/aws-fpga.git
 AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
@@ -34,7 +33,7 @@ RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
 riscv-tools: $(RISCV_INSTALL_DIR)
 $(RISCV_INSTALL_DIR): update-instance
 	make -C $(RISCV_TOOLS_DIR) checkout-all
-	make -C $(RISCV_TOOLS_DIR) build-riscv-tools 2>&1 > build.log
+	make -C $(RISCV_TOOLS_DIR) build-riscv-tools 
 
 LLVM_DIR := $(BUILD_PATH)/llvm
 llvm-install: riscv-tools
@@ -59,6 +58,7 @@ env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile
 
 /etc/profile.d/bsg.sh:
 	@echo "export BSG_IP_CORES_DIR=$(BSG_IP_CORES_DIR)" | sudo tee $@
+	@echo "export BASEJUMP_STL_DIR=$(BASEJUMP_STL_DIR)" | sudo tee -a $@
 	@echo "export BSG_MANYCORE_DIR=$(BSG_MANYCORE_DIR)" | sudo tee -a $@
 	@echo "export BSG_F1_DIR=$(BSG_F1_DIR)" | sudo tee -a $@
 
