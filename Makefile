@@ -23,7 +23,7 @@ help:
 
 
 build-ami: checkout-repos
-	$(BSG_F1_DIR)/scripts/amibuild/build.py bsg_bladerunner@$(RELEASE_BRANCH) $(AFI_ID)
+	$(BSG_F1_DIR)/scripts/amibuild/build.py bsg_bladerunner@$(RELEASE_BRANCH) $(AFI_ID) $(FPGA_IMAGE_VERSION)
 
 build-dcp: checkout-repos
 	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build
