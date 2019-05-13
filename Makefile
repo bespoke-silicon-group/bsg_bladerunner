@@ -39,7 +39,7 @@ dirty_check:
 	@echo "Error! bsg_bladerunner repository is dirty. Push commits before building"
 	@exit 1
 
-build-ami:checkout-repos
+build-ami: $(ISDIRTY_CHECK) checkout-repos
 	$(BSG_F1_DIR)/scripts/amibuild/build.py Bladerunner bsg_bladerunner@$(BRANCH_NAME) $(AFI_ID) \
 		$(FPGA_IMAGE_VERSION)$(RC_STR) $(if $(DRY_RUN),-d)
 
