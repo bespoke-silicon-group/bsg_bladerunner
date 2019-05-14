@@ -56,9 +56,9 @@ share-afi: $(ISDIRTY_CHECK)
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
 define get_current_ami
-    @aws ec2 describe-images --owner=self \
+    @echo `aws ec2 describe-images --owner=self \
 	--filters "Name=tag:Version,Values=$(FPGA_IMAGE_VERSION)" \
-	--query 'Images[0].ImageId' | sed 's/"//g'
+	--query 'Images[0].ImageId' | sed 's/"//g'`
 endef
 
 print-ami: $(ISDIRTY_CHECK)
