@@ -70,7 +70,7 @@ build-ami: $(ISDIRTY_CHECK) checkout-repos
 		$(FPGA_IMAGE_VERSION) $(if $(DRY_RUN),-d)
 
 share-ami: $(ISDIRTY_CHECK)
-	aws ec2 modify-image-attribute --image-id '$(call get_current_ami)' \
+	aws ec2 modify-image-attribute --image-id $(get_current_ami) \
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
