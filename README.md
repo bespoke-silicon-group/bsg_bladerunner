@@ -54,23 +54,25 @@ and run `make cosimulation` from inside the BSG F1/cl_manycore directory.
 
 ### Build an Amazon FPGA Image (AFI)
 
-To build an AFI:
+These steps will build the FPGA image and upload it to AWS. FPGA_IMAGE_VERSION
+will be used as the value for the 'Version' key in AFI Tags.
 
 1. Clone this repository.
 
-2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid naming
+2. **Update the FPGA_IMAGE_VERSION variable** in `Makefile.deps` to avoid naming
     conflicts.
 
 3. Change the repository commit IDs in `Makefile.deps` to the desired commit
     IDs.
 
-4. *Run `make build-afi`* from inside this repository. This will build the FPGA
-    image and upload it to AWS. FPGA_IMAGE_VERSION will be used as the value for
-    the 'Version' key in AFI Tags.
+4. Run `make build-afi` from inside this repository. 
+
 
 ### Build an Amazon Machine Image (AMI)
    
-To build an AMI:
+These steps will build the Machine image and upload it to
+AWS. FPGA_IMAGE_VERSION will be used as the value for the 'Version' key in AMI
+Tags.
 
 1. Clone this repository.
 
@@ -82,9 +84,7 @@ To build an AMI:
 
 4. Commit changes and push to a branch. (This step is critical!)
 
-5. *Run `make build-ami`* from inside this repository. This will build the FPGA
-    image and upload it to AWS. FPGA_IMAGE_VERSION will be used as the value for
-    the 'Version' key in AMI Tags.
+5. Run `make build-ami` from inside this repository. 
 
 ### To Make a Release
    
@@ -109,3 +109,5 @@ To make a release:
 7. Test the release
     
 8. Make a PR to `dev` or `master` depending on the state of the release.
+
+9. Apply a tag to the release when it is merged to master
