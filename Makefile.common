@@ -1,5 +1,7 @@
+CURRENT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+ 
+include $(CURRENT_DIR)/Makefile.deps
 
-include Makefile.deps
 BUILD_PATH := $(shell pwd)
 
 define upper
