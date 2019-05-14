@@ -62,7 +62,7 @@ define get_current_ami
 endef
 
 print-ami: $(ISDIRTY_CHECK)
-	@echo $(shell get_current_ami)
+	@echo $(shell $(call get_current_ami))
 
 build-ami: $(ISDIRTY_CHECK) checkout-repos
 	$(BSG_F1_DIR)/scripts/amibuild/build.py Bladerunner \
@@ -70,7 +70,7 @@ build-ami: $(ISDIRTY_CHECK) checkout-repos
 		$(FPGA_IMAGE_VERSION) $(if $(DRY_RUN),-d)
 
 share-ami: $(ISDIRTY_CHECK)
-	$(eval AMI_ID :=  $(shell get_current_ami))
+	$(eval AMI_ID :=  $(shell $(call get_current_ami)))
 	aws ec2 modify-image-attribute --image-id $(AMI_ID) \
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
