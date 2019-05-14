@@ -56,13 +56,13 @@ share-afi: $(ISDIRTY_CHECK)
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
 define get_current_ami
-    @echo `aws ec2 describe-images --owner=self \
+	$(shell `aws ec2 describe-images --owner=self \
 	--filters "Name=tag:Version,Values=$(FPGA_IMAGE_VERSION)" \
-	--query 'Images[0].ImageId' | sed 's/"//g'`
+	--query 'Images[0].ImageId' | sed 's/"//g'`)
 endef
 
 print-ami: $(ISDIRTY_CHECK)
-	$(call get_current_ami)
+	@echo $(shell get_current_ami)
 
 build-ami: $(ISDIRTY_CHECK) checkout-repos
 	$(BSG_F1_DIR)/scripts/amibuild/build.py Bladerunner \
@@ -70,7 +70,7 @@ build-ami: $(ISDIRTY_CHECK) checkout-repos
 		$(FPGA_IMAGE_VERSION) $(if $(DRY_RUN),-d)
 
 share-ami: $(ISDIRTY_CHECK)
-	$(eval AMI_ID :=  $(call get_current_ami))
+	$(eval AMI_ID :=  $(shell get_current_ami))
 	aws ec2 modify-image-attribute --image-id $(AMI_ID) \
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
