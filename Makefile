@@ -14,7 +14,7 @@ ISDIRTY_CHECK:= $(shell git diff-index --quiet $(ORIGIN_NAME)/$(BRANCH_NAME) -- 
 
 include Makefile.common
 
-.PHONY: all build-dcp upload-afi build-ami clean help share-ami share-afi
+.PHONY: all build-dcp upload-afi build-ami clean help share-ami share-afi print-ami $(IS_DIRTY_CHECK)
 
 .DEFAULT_GOAL := help
 all: help
@@ -25,21 +25,23 @@ help:
 	@echo "		           the AGFI and AFI in Makefile.deps "
 	@echo "		build-dcp: Compile the FPGA design (locally) with the "
 	@echo "		           hashes and repositories in Makefile.deps "
-	@echo "		upload-afi: Upload the compiled FPGA design into S3 "
+	@echo "		build-afi: Upload the compiled FPGA design into S3 "
 	@echo "		           and create an Amazon FPGA Image (AFI) "
 	@echo "		           and an Amazon Global FPGA Image ID (AGFI)"
+	@echo "		print-ami: Print the AMI associated with the current"
+	@echo "                    version"
 	@echo "		clean: Remove all build files and repositories"
 
 dirty_check:
 	@echo "Error! bsg_bladerunner repository is dirty. Push changes before building"
 	@exit 1
 
-build-dcp: $(ISDIRTY_CHECK) checkout-repos
+build-dcp: checkout-repos
 	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build
 
-upload-afi: $(ISDIRTY_CHECK) build-dcp upload.json
+build-afi: build-dcp upload.json
 
-upload.json: $(ISDIRTY_CHECK) build-dcp
+upload.json: build-dcp
 	-include $(BSG_F1_DIR)/cl_manycore/Makefile.dimensions
 	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
 		$(FPGA_IMAGE_VERSION) $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar \
@@ -59,7 +61,7 @@ define get_current_ami
 	--query 'Images[0].ImageId' | sed 's/"//g'
 endef
 
-get-ami:
+print-ami: $(ISDIRTY_CHECK)
 	$(call get_current_ami)
 
 build-ami: $(ISDIRTY_CHECK) checkout-repos
