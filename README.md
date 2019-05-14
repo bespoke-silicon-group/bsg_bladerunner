@@ -26,6 +26,9 @@ infrastructure. It can be used to:
 * `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
   an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
 
+* `print-ami` : Prints the current AMI associated with the version in
+  Makefile.deps.
+
 ## File List
 
 `Makefile` provides targets cloning repositories and building new Amazon Machine
