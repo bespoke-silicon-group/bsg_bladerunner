@@ -46,64 +46,66 @@ variable defined `Makefile.deps`
 ### F1 Cosimulation
 
 To run cosimulation of the manycore architecture, clone this repository and then
-    run `make checkout-repos`. Define BSG_IP_CORES_DIR and BSG_MANYCORE_DIR as
-    environment variables pointing to the BaseJump STL and BSG Manycore
-    Directories, and run `make cosimulation` from inside the BSG F1/cl_manycore
-    directory.
+run `make checkout-repos`. Define BSG_IP_CORES_DIR and BSG_MANYCORE_DIR as
+environment variables pointing to the BaseJump STL and BSG Manycore Directories,
+and run `make cosimulation` from inside the BSG F1/cl_manycore directory.
 
-    (This process will be simplified in v0.4.3)
+(This process will be simplified in v0.4.3)
 
 ### Build an Amazon FPGA Image (AFI)
 
 To build an AFI:
-    1. Clone this repository.
 
-    2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid
-    naming conflicts.
+1. Clone this repository.
 
-    3. Change the repository commit IDs in `Makefile.deps` to the desired commit
+2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid naming
+    conflicts.
+
+3. Change the repository commit IDs in `Makefile.deps` to the desired commit
     IDs.
 
-    4. *Run `make build-afi`* from inside this repository. This will build the
-    FPGA image and upload it to AWS. FPGA_IMAGE_VERSION will be used as the
-    value for the 'Version' key in AFI Tags.
+4. *Run `make build-afi`* from inside this repository. This will build the FPGA
+    image and upload it to AWS. FPGA_IMAGE_VERSION will be used as the value for
+    the 'Version' key in AFI Tags.
 
 ### Build an Amazon Machine Image (AMI)
    
 To build an AMI:
-    1. Clone this repository.
 
-    2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid
-    naming conflicts.
+1. Clone this repository.
 
-    3. Change the repository commit IDs in `Makefile.deps` to the desired commit
+2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid naming
+    conflicts.
+
+3. Change the repository commit IDs in `Makefile.deps` to the desired commit
     IDs.
 
-    4. Commit changes and push to a branch. (This step is critical!)
+4. Commit changes and push to a branch. (This step is critical!)
 
-    5. *Run `make build-ami`* from inside this repository. This will build the
-    FPGA image and upload it to AWS. FPGA_IMAGE_VERSION will be used as the
-    value for the 'Version' key in AMI Tags.
+5. *Run `make build-ami`* from inside this repository. This will build the FPGA
+    image and upload it to AWS. FPGA_IMAGE_VERSION will be used as the value for
+    the 'Version' key in AMI Tags.
 
 ### To Make a Release
    
 To make a release:
-    1. Clone this repository.
 
-    2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid
-    naming conflicts.
+1. Clone this repository.
 
-    3. Change the repository commit IDs in `Makefile.deps` to the desired commit
-    IDs.
+2. *Update the FPGA_IMAGE_VERSION variable* in `Makefile.deps` to avoid naming
+    conflicts.
 
-    4. *Run `make build-afi`* from inside this repository. (See the section
-    Build an Amazon FPGA Image)
+3. Change the repository commit IDs in `Makefile.deps` to the desired commit
+   IDs.
 
-    5. Commit changes and push to a branch. 
+4. *Run `make build-afi`* from inside this repository. (See the section Build an
+    Amazon FPGA Image)
 
-    6. *Run `make build-ami`* from inside this repository. (See the section
-    Build an Amazon Machine Image)
+5. Commit changes and push to a branch.
 
-    7. Test the release
+6. *Run `make build-ami`* from inside this repository. (See the section Build an
+    Amazon Machine Image)
+
+7. Test the release
     
-    8. Make a PR to `dev` or `master` depending on the state of the release.
+8. Make a PR to `dev` or `master` depending on the state of the release.
