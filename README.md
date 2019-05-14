@@ -55,7 +55,8 @@ and run `make cosimulation` from inside the BSG F1/cl_manycore directory.
 ### Build an Amazon FPGA Image (AFI)
 
 These steps will build the FPGA image and upload it to AWS. FPGA_IMAGE_VERSION
-will be used as the value for the 'Version' key in AFI Tags.
+will be used as the value for the 'Version' key in AFI Tags. The new AFI/AGFI
+IDs are printed on the command line and in upload.json.
 
 1. Clone this repository.
 
@@ -67,6 +68,7 @@ IDs.
 
 4. Run `make build-afi` from inside this repository. 
 
+The new AFI/AGFI IDs are printed on the command line and in upload.json.
 
 ### Build an Amazon Machine Image (AMI)
    
