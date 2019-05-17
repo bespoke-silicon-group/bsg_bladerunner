@@ -1,8 +1,8 @@
-CURRENT_DIR=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
- 
-include $(CURRENT_DIR)/Makefile.deps
+BLADERUNNER_ROOT=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-BUILD_PATH := $(shell pwd)
+include $(BLADERUNNER_ROOT)/Makefile.deps
+
+BUILD_PATH := $(BLADERUNNER_ROOT)
 
 define upper
 $(shell echo $(1) | tr [:lower:] [:upper:])
