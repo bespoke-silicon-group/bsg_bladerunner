@@ -61,6 +61,7 @@ env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile
 	@echo "export BASEJUMP_STL_DIR=$(BASEJUMP_STL_DIR)" | sudo tee -a $@
 	@echo "export BSG_MANYCORE_DIR=$(BSG_MANYCORE_DIR)" | sudo tee -a $@
 	@echo "export BSG_F1_DIR=$(BSG_F1_DIR)" | sudo tee -a $@
+	@echo "export LLVM_DIR=$(HOME)/bsg_bladerunner/llvm/llvm-install" | sudo tee -a $@
 
 /etc/profile.d/profile.d_bsg.sh: $(AWS_FPGA_REPO_DIR) checkout-repos
 	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
