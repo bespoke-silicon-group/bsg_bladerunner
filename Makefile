@@ -37,7 +37,7 @@ dirty_check:
 	@exit 1
 
 build-dcp: checkout-repos
-	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build
+	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build FPGA_IMAGE_VERSION=$(FPGA_IMAGE_VERSION)
 
 build-afi: build-dcp upload.json
 
