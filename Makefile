@@ -75,6 +75,10 @@ share-ami: $(ISDIRTY_CHECK)
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
+setup: checkout-repos 
+	$(MAKE) -f Makefile.amibuild riscv-tools
+	$(MAKE) -f Makefile.amibuild aws-fpga AWS_FPGA_REPO_DIR=$(CURDIR)/aws-fpga
+
 clean:
 	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
-	rm -rf upload.json
+	rm -rf upload.json aws-fpga
