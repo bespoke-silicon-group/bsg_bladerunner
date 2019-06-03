@@ -1,6 +1,8 @@
+BLADERUNNER_ROOT=$(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-include Makefile.deps
-BUILD_PATH := $(shell pwd)
+include $(BLADERUNNER_ROOT)/Makefile.deps
+
+BUILD_PATH := $(BLADERUNNER_ROOT)
 
 define upper
 $(shell echo $(1) | tr [:lower:] [:upper:])
