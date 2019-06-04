@@ -2,7 +2,7 @@
 include Makefile.common
 
 .PHONY: all update-instance riscv-tools llvm-install install env-install \
-	xdma-install bsg-install help
+	xdma-install bsg-install help aws-fpga
 
 .DEFAULT_GOAL := all
 all:help
@@ -24,14 +24,15 @@ yum.log:
 
 AWS_FPGA_REPO_URL ?= https://github.com/aws/aws-fpga.git
 AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
-$(AWS_FPGA_REPO_DIR): update-instance
+aws-fpga: $(AWS_FPGA_REPO_DIR)
+$(AWS_FPGA_REPO_DIR): 
 	git clone $(AWS_FPGA_REPO_URL) $(AWS_FPGA_REPO_DIR)
 	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
 riscv-tools: $(RISCV_INSTALL_DIR)
-$(RISCV_INSTALL_DIR): update-instance
+$(RISCV_INSTALL_DIR): 
 	make -C $(RISCV_TOOLS_DIR) checkout-all
 	make -C $(RISCV_TOOLS_DIR) build-riscv-tools 
 
