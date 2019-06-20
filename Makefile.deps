@@ -3,9 +3,9 @@ AWS_FPGA_VERSION := v1.4.5
 
 DEPENDENCIES := bsg_manycore bsg_f1 basejump_stl
 
-BSG_MANYCORE_HASH   := 
-BSG_F1_HASH         := 
-BASEJUMP_STL_HASH   := 
+BSG_MANYCORE_HASH   := a2d1e60
+BSG_F1_HASH         := af71191
+BASEJUMP_STL_HASH   := 1406eb4
 F12XLARGE_TEMPLATE_ID := lt-01bc73811e48f0b26
 AFI_ID := 
 AGFI_ID := 
