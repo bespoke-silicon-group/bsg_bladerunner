@@ -33,7 +33,7 @@ RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
 riscv-tools: $(RISCV_INSTALL_DIR)
 $(RISCV_INSTALL_DIR): 
-	make -C $(RISCV_TOOLS_DIR) checkout-all
+	make -C $(RISCV_TOOLS_DIR) checkout-repos
 	make -C $(RISCV_TOOLS_DIR) build-riscv-gnu-tools
 
 LLVM_DIR := $(BUILD_PATH)/llvm
