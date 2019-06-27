@@ -31,7 +31,7 @@ From the `bsg_bladerunner` root directory:
 
 ```
 cd aws-fpga/
-patch -p0 ../aws-fpga.patch
+patch -p0 < ../aws-fpga.patch
 ```
 
 ## Every Time Setup Steps
