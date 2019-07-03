@@ -23,17 +23,6 @@ make setup
 
 This will take some time. Go get lunch.
 
-### Step 3 
-
-Apply our patch to aws-fpga.
-
-From the `bsg_bladerunner` root directory:
-
-```
-cd aws-fpga/
-patch -p0 < ../aws-fpga.patch
-```
-
 ## Every Time Setup Steps
 
 These steps need to done before you run cosimulation after you have logged in.
