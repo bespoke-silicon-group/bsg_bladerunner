@@ -70,6 +70,7 @@ At the moment the regression subsuites are:
 1. library
 2. spmd
 3. cuda
+4. python
 
 From `bsg_bladerunner` root directory:
 
