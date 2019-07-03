@@ -80,5 +80,8 @@ setup: checkout-repos
 	$(MAKE) -f Makefile.amibuild aws-fpga AWS_FPGA_REPO_DIR=$(CURDIR)/aws-fpga
 
 clean:
+	rm -rf upload.json
+
+squeakyclean:
 	$(foreach dep,$(DEPENDENCIES),rm -rf $(dep)*)
-	rm -rf upload.json aws-fpga
+	rm -rf aws-fpga
