@@ -29,7 +29,7 @@ $(AWS_FPGA_REPO_DIR):
 	git clone $(AWS_FPGA_REPO_URL) $(AWS_FPGA_REPO_DIR)
 	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
 	cd $(AWS_FPGA_REPO_DIR); patch -p0 < $(BLADERUNNER_ROOT)/aws-fpga.patch
-	source $(AWS_FPGA_REPO_DIR)/aws-fpga/hdk_setup.sh
+	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
