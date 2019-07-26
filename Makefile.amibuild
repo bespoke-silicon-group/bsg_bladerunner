@@ -1,3 +1,10 @@
+# The following lines of code are purely for runing setup-uw. It searches for
+# bsg_cadenv to configure Vivado and VCS in the environment
+ifneq ("$(wildcard bsg_cadenv/cadenv.mk)","")
+$(warning $(shell echo -e "\t\n\t$(ORANGE)Found bsg_cadenv. Including cadenv.mk.$(NC)"))
+include bsg_cadenv/cadenv.mk
+export VCS_HOME=$(VCS_MX_HOME)
+endif
 
 include Makefile.common
 
