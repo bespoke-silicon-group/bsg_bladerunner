@@ -1,8 +1,13 @@
 # COSIM
 
-## One Time Setup Steps
+## Setup (For UW Users)
 
 These steps only need to be done once.
+
+### Prerequisites
+
+UW Users must have an SSH Key registered on their bitbucket account, and access
+to the bsg_cadenv repository. The SSH Key will be used to clone the latter.
 
 ### Step 1
 
@@ -14,7 +19,44 @@ git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
 
 ### Step 2
 
-Checkout correct revisions of dependent projects and build RISCV toolchain.
+Checkout correct revisions of dependent projects and build the RISC-V
+toolchain. This will clone bsg_cadenv, which sets the VCS environment for
+cosimulation.
+
+```
+cd bsg_bladerunner/
+make setup-uw
+```
+
+This will take some time. Go get lunch.
+
+
+## Setup (For Non-UW Users)
+
+### Prerequisites
+
+To run cosimulation you must have Vivado 2018.2 installed and correctly
+configured in your environment. Typically this is done by running `source
+<path-to-Vivado>/settings64.sh`. 
+
+You must also have VCS-MX correctly installed and configured in your
+environment. Your system administrator can help with this.
+
+In either case, the cosimulation makefiles will warn/fail if it cannot find
+either tool.
+
+### Step 1
+
+Clone this repository.
+
+```
+git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
+```
+
+### Step 2
+
+Checkout correct revisions of dependent projects and build the RISC-V
+toolchain. 
 
 ```
 cd bsg_bladerunner/
@@ -23,33 +65,10 @@ make setup
 
 This will take some time. Go get lunch.
 
-## Every Time Setup Steps
 
-These steps need to done before you run cosimulation after you have logged in.
+## Running Regression/Cosimulation
 
-### Step 1
-
-Setup your AWS HDK environment.
-
-From the `bsg_bladerunner` root directory:
-
-```
-source aws-fpga/hdk_setup.sh
-```
-
-The first time you do this it will take a little while. It will be quick every time after that.
-
-### Step 2
-
-Setup your VCS development environment.
-
-How this is done depends on your organization's setup.
-
-If you are a member of Bespoke Silicon Group contact Dustin for instructions.
-
-## Running the Regression
-
-These steps explain how to run regression tests in cosimulation.
+These steps explain how to run regxsression tests in cosimulation.
 
 ### Running the Entire Regression Suite
 
@@ -57,15 +76,13 @@ From the `bsg_bladerunner` root directory:
 
 ```
 cd bsg_f1_<hash>/cl_manycore/testbenches/
-make cosim AXI_MEMORY_MODEL=(0|1)
+make regression
 ```
 
-We recommend setting `AXI_MEMORY_MODEL` to 1 if possible: it's noticably faster.
+### Running a Single Regression Suite
 
-
-### Running a Single Regression Subsuite
-
-At the moment the regression subsuites are:
+It is also possible to run a single regression suite. At the moment the
+regression suites are:
 
 1. library
 2. spmd
@@ -76,7 +93,7 @@ From `bsg_bladerunner` root directory:
 
 ```
 cd bsg_f1_<hash>/cl_manycore/testbenches/<subsuite>/
-make cosim AXI_MEMORY_MODEL=(0|1)
+make regression
 ```
 
 ### Running a Single Test
@@ -85,18 +102,14 @@ From `bsg_bladerunner` root directory:
 
 ```
 cd bsg_f1_<hash>/cl_manycore/testbenches/<subsuite>/
-make <test_name> AXI_MEMORY_MODEL=(0|1)
+make <test_name> 
 ```
 
-Here's an example in which we run the `test_printing` test in the `library` suite:
+Here's an example in which we run the `test_rom` test in the `library` suite:
 
 ```
 cd bsg_f1_<hash>/cl_manycore/testbenches/library/
-make test_printing AXI_MEMORY_MODEL=(0|1)
+make test_rom.log
 ```
 
 For each subsuite, tests are list in `bsg_f1_<hash>/cl_manycore/regression/<suite>/Makefile.tests`
-
-## Running Your Own Application
-
-TODO: fill this in.

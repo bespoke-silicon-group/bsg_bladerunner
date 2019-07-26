@@ -75,6 +75,11 @@ share-ami: $(ISDIRTY_CHECK)
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
+setup-uw: setup bsg_cadenv
+
+bsg_cadenv: 
+	git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git	
+
 setup: checkout-repos 
 	$(MAKE) -f Makefile.amibuild riscv-tools
 	$(MAKE) -f Makefile.amibuild aws-fpga AWS_FPGA_REPO_DIR=$(CURDIR)/aws-fpga
