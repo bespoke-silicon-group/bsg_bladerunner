@@ -1,117 +1,100 @@
 # BSG Bladerunner
 
-This repository tracks releases of the BSG Manycore source code and
+This repository tracks releases of the HammerBlade source code and
 infrastructure. It can be used to:
+
+* Compile and Simulate FPGA Designs
+
+* Generate [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
 
 * Create [Amazon Machine
   Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) with
   manycore tools and libraries-preinstalled.
 
-* Compile and Simulate FPGA Designs using the repositories and git hashes listed
-  in `Makefile.deps`
+## [Makefile](Makefile) targets
 
-* Generate [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
-  using the repositories and git hashes listed in `Makefile.deps`.
-
-## Relevant Makefile targets
-
-* `checkout-repos`: Clone repositories that are needed for the
+* `checkout-repos`: Clone submodule repositories that are needed for the
   Manycore/Bladerunner project.
 
 * `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
 
-* `build-dcp` : Compiles the manycore design (locally) as a Design Checkpoint
-  (DCP)
+* `build-tarball` : Compiles the manycore design (locally) as a tarball
 
 * `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
   an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
 
-* `print-ami` : Prints the current AMI associated with the version in
-  Makefile.deps.
+* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
+  in [Makefile.common](Makefile.common)
 
 ## File List
 
-`Makefile` provides targets cloning repositories and building new Amazon Machine
-images.
+* [Makefile](Makefile) provides targets cloning repositories and building new
+Amazon Machine images.
 
-`Makefile.amibuild` provides targets for building and installing the manycore
-tools on a Amazon EC2 instance. Indirectly used by the target `build-ami` in Makefile.
+* [Makefile.amibuild](Makefile.amibuild) provides targets for building and
+installing the manycore tools on a Amazon EC2 instance. Indirectly used by the
+target `build-ami` in [Makefile](Makefile).
 
-`Makefile.deps` Lists the repository dependencies for this project and what
-commits from each repository constitute a release (listed as `<REPO_NAME> :=
-commit_hash`)
-
-`Makefile.common` defines paths to each cloned repository using the DEPENDENCIES
-variable defined `Makefile.deps`
+* [Makefile.common](Makefile.common) defines paths to each of the submodule
+dependencies
 
 ## Instructions
 
 ### F1 Cosimulation
 
-To run cosimulation of the manycore architecture, clone this repository and then
-run `make checkout-repos`. Define BSG_IP_CORES_DIR and BSG_MANYCORE_DIR as
-environment variables pointing to the BaseJump STL and BSG Manycore Directories,
-and run `make cosimulation` from inside the BSG F1/cl_manycore directory.
-
-(This process will be simplified in v0.4.3)
+To run cosimulation see the instructions in COSIM.md
 
 ### Build an Amazon FPGA Image (AFI)
 
-These steps will build the FPGA image and upload it to AWS. FPGA_IMAGE_VERSION
+These steps will build the FPGA image and upload it to AWS. `FPGA_IMAGE_VERSION`
 will be used as the value for the 'Version' key in AFI Tags. The new AFI/AGFI
 IDs are printed on the command line and in upload.json.
 
 1. Clone this repository.
 
-2. Update the FPGA_IMAGE_VERSION variable in `Makefile.deps` to avoid naming
-conflicts.
+2. Update the `FPGA_IMAGE_VERSION` variable in [Makefile.common](Makefile.common)
+to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
+'Version' key in the AMI and AFI Tags.)
 
-3. Change the repository commit IDs in `Makefile.deps` to the desired commit
-IDs.
-
-4. Run `make build-afi` from inside this repository. 
+3. Run `make build-afi` from inside this repository. 
 
 The new AFI/AGFI IDs are printed on the command line and in upload.json.
 
 ### Build an Amazon Machine Image (AMI)
    
 These steps will build the Machine image and upload it to
-AWS. FPGA_IMAGE_VERSION will be used as the value for the 'Version' key in AMI
+AWS. `FPGA_IMAGE_VERSION` will be used as the value for the 'Version' key in AMI
 Tags.
 
 1. Clone this repository.
 
-2. Update the FPGA_IMAGE_VERSION variable in `Makefile.deps` to avoid naming
-conflicts.
+2. Update the `FPGA_IMAGE_VERSION` variable in [Makefile.common](Makefile.common)
+to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
+'Version' key in the AMI and AFI Tags.)
 
-3. Change the repository commit IDs in `Makefile.deps` to the desired commit
-IDs.
+3. Commit changes and push to a branch. (This step is critical!)
 
-4. Commit changes and push to a branch. (This step is critical!)
-
-5. Run `make build-ami` from inside this repository. 
+4. Run `make build-ami` from inside this repository. 
 
 ### To Make a Release
    
 These steps will build an AMI and an AFI and upload them to
-AWS. FPGA_IMAGE_VERSION will be used as the value for the 'Version' key in the
-AMI and AFI Tags.
+AWS. It is a combination of the steps above.
 
 1. Clone this repository.
 
-2. Update the FPGA_IMAGE_VERSION variable in `Makefile.deps` to avoid naming
-conflicts.
+2. Update the `FPGA_IMAGE_VERSION` variable in [Makefile.common](Makefile.common)
+to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
+'Version' key in the AMI and AFI Tags.)
 
-3. Change the repository commit IDs in `Makefile.deps` to the desired commit
-IDs.
-
-4. Run `make build-afi` from inside this repository. (See the section Build an
+3. Run `make build-afi` from inside this repository. (See the section Build an
 Amazon FPGA Image)
 
-6. Replace the `AGFI_ID` and `AMI_ID` variables with the new values in
-upload.json (generated by the previous step).
+4. Replace the `AGFI_ID` and `AMI_ID` variables in
+[Makefile.common](Makefile.common) with the new values in upload.json (generated
+by the previous step).
 
-5. Commit the new commit hashes, and AGFI/AFI_ID variables and push the changes to a branch.
+5. Commit your changes and push to a branch
 
 6. Run `make build-ami` from inside this repository. (See the section Build an
 Amazon Machine Image)

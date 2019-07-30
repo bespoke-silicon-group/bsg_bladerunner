@@ -9,7 +9,7 @@ endif
 include Makefile.common
 
 .PHONY: all update-instance riscv-tools llvm-install install env-install \
-	xdma-install bsg-install help aws-fpga
+	xdma-install bsg-install help setup-aws-fpga
 
 .DEFAULT_GOAL := all
 all:help
@@ -31,12 +31,11 @@ yum.log:
 
 AWS_FPGA_REPO_URL ?= https://github.com/aws/aws-fpga.git
 AWS_FPGA_REPO_DIR ?= /home/centos/src/project_data/aws-fpga
-aws-fpga: $(AWS_FPGA_REPO_DIR)
-$(AWS_FPGA_REPO_DIR): 
-	git clone $(AWS_FPGA_REPO_URL) $(AWS_FPGA_REPO_DIR)
-	cd $(AWS_FPGA_REPO_DIR); git checkout $(AWS_FPGA_VERSION)
+setup-aws-fpga: $(AWS_FPGA_REPO_DIR).setup.log
+$(AWS_FPGA_REPO_DIR).setup.log:
+	git submodule update --init aws-fpga
 	cd $(AWS_FPGA_REPO_DIR); patch -p0 < $(BLADERUNNER_ROOT)/aws-fpga.patch
-	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
+	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh > $@
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
@@ -52,12 +51,12 @@ llvm-install: riscv-tools
 # TODO: Set permissions
 XDMA_KO_FILE := /lib/modules/$(shell uname -r)/extra/xdma.ko
 xdma-install:$(XDMA_KO_FILE)
-$(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR)
+$(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR).setup.log
 	make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma
 	sudo make -C $(AWS_FPGA_REPO_DIR)/sdk/linux_kernel_drivers/xdma install
 
 bsg-install: /usr/lib64/libbsg_manycore_runtime.so.1.0
-/usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR)
+/usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR).setup.log
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/cl_manycore/libraries
 	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
 
@@ -73,7 +72,7 @@ env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile
 	@echo "export BSG_F1_DIR=$(BSG_F1_DIR)" | sudo tee -a $@
 	@echo "export LLVM_DIR=$(HOME)/bsg_bladerunner/llvm/llvm-install" | sudo tee -a $@
 
-/etc/profile.d/profile.d_bsg.sh: $(AWS_FPGA_REPO_DIR) checkout-repos
+/etc/profile.d/profile.d_bsg.sh: checkout-repos $(AWS_FPGA_REPO_DIR).setup.log 
 	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
 	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh

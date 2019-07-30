@@ -1,3 +1,5 @@
-bsg_*
-aws-fpga
-basejump*
+bsg_f1_*
+bsg_manycore_*
+basejump_stl_*
+bsg_cadenv
+aws-fpga.setup.log
