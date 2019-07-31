@@ -16,9 +16,6 @@ ISDIRTY_CHECK:= $(shell git diff-index --quiet $(ORIGIN_NAME)/$(BRANCH_NAME) --i
 
 include Makefile.common
 
-ifneq ("$(wildcard $(BSG_F1_DIR)/cl_manycore)","")
-include $(BSG_F1_DIR)/cl_manycore/Makefile.machine.include
-endif
 .PHONY: help clean setup setup-uw dirty_check \
 	build-dcp build-afi print-afi share-afi \
 	build-ami share-ami print-ami checkout-repos \
@@ -58,7 +55,14 @@ $(CL_MANYCORE_TARBALL): $(DEPENDENCIES)
 
 build-afi: $(CL_MANYCORE_TARBALL) upload.json
 
-# CONFIG STRING is defined in Makefile.machine.include
+ifneq ("$(wildcard $(BSG_F1_DIR)/cl_manycore)","")
+include $(BSG_F1_DIR)/cl_manycore/Makefile.machine.include
+endif
+# CONFIG STRING uses variables defined in Makefile.machine.include
+CONFIG_STRING  = BSG_MACHINE_GLOBAL_X = $(BSG_MACHINE_GLOBAL_X),
+CONFIG_STRING += BSG_MACHINE_GLOBAL_Y = $(BSG_MACHINE_GLOBAL_Y),
+CONFIG_STRING += CL_MANYCORE_DIM_X = $(CL_MANYCORE_DIM_X),
+CONFIG_STRING += CL_MANYCORE_DIM_Y = $(CL_MANYCORE_DIM_Y)
 upload.json: $(CL_MANYCORE_TARBALL)
 	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
 		$(FPGA_IMAGE_VERSION) $< \
