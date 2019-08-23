@@ -1,0 +1,12 @@
+[submodule "bsg_f1"]
+	path = bsg_f1
+	url = git@github.com:bespoke-silicon-group/bsg_f1.git
+[submodule "bsg_manycore"]
+	path = bsg_manycore
+	url = git@github.com:bespoke-silicon-group/bsg_manycore.git
+[submodule "basejump_stl"]
+	path = basejump_stl
+	url = git@github.com:bespoke-silicon-group/basejump_stl
+[submodule "aws-fpga"]
+	path = aws-fpga
+	url = git@github.com:aws/aws-fpga.git
