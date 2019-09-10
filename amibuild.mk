@@ -57,8 +57,8 @@ $(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR).setup.log
 
 bsg-install: /usr/lib64/libbsg_manycore_runtime.so.1.0
 /usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR).setup.log
-	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/cl_manycore/libraries
-	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
+	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/libraries
+	sudo make -C $(BSG_F1_DIR)/libraries install
 
 env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile.d/bsg.sh /etc/profile.d/bsg-f1.sh
 
@@ -85,7 +85,7 @@ install: update-instance env-install xdma-install bsg-install riscv-tools llvm-i
 	sudo shutdown -h now # Final step
 
 clean:
-	make -C $(BSG_F1_DIR)/cl_manycore/libraries uninstall
+	make -C $(BSG_F1_DIR)/libraries uninstall
 	sudo rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) 
 	sudo rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh,bsg.sh} *.log
 

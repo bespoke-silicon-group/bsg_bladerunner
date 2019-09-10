@@ -14,7 +14,7 @@ BRANCH_NAME:=$(shell git symbolic-ref --short HEAD)
 # changes that are not globally visible
 ISDIRTY_CHECK:= $(shell git diff-index --quiet $(ORIGIN_NAME)/$(BRANCH_NAME) --ignore-submodules -- || echo dirty_check)
 
-include Makefile.common
+include project.mk
 
 .PHONY: help clean setup setup-uw dirty_check \
 	build-dcp build-afi print-afi share-afi \
@@ -36,7 +36,7 @@ help:
 	@echo "		clean: Remove all build files and repositories"
 
 aws-fpga.setup.log:
-	$(MAKE) -f Makefile.amibuild setup-aws-fpga \
+	$(MAKE) -f amibuild.mk setup-aws-fpga \
 		AWS_FPGA_REPO_DIR=$(BLADERUNNER_ROOT)/aws-fpga
 
 $(DEPENDENCIES): aws-fpga.setup.log
@@ -46,18 +46,16 @@ dirty_check:
 	@echo "Error! this repository is dirty. Push changes before building"
 	@exit 1
 
-CL_MANYCORE_TARBALL := $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar
+CL_MANYCORE_TARBALL := $(BSG_F1_DIR)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar
 
 build-tarball: $(CL_MANYCORE_TARBALL)
 $(CL_MANYCORE_TARBALL): $(DEPENDENCIES)
-	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build \
+	make -C $(BSG_F1_DIR)// build \
 		FPGA_IMAGE_VERSION=$(FPGA_IMAGE_VERSION)
 
 build-afi: $(CL_MANYCORE_TARBALL) upload.json
 
-ifneq ("$(wildcard $(BSG_F1_DIR)/cl_manycore)","")
-include $(BSG_F1_DIR)/cl_manycore/Makefile.machine.include
-endif
+include $(BSG_F1_DIR)/Makefile.machine.include
 # CONFIG STRING uses variables defined in Makefile.machine.include
 CONFIG_STRING  = BSG_MACHINE_GLOBAL_X = $(BSG_MACHINE_GLOBAL_X),
 CONFIG_STRING += BSG_MACHINE_GLOBAL_Y = $(BSG_MACHINE_GLOBAL_Y),
@@ -101,13 +99,14 @@ bsg_cadenv:
 	git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git	
 
 setup: $(DEPENDENCIES) 
-	$(MAKE) -f Makefile.amibuild riscv-tools
+	$(MAKE) -f amibuild.mk riscv-tools
 
 setup-uw: bsg_cadenv setup 
 
 
 clean:
 	rm -rf upload.json
+	make -C bsg_f1 clean
 
 squeakyclean:
 	git submodule deinit $(DEPENDENCIES)

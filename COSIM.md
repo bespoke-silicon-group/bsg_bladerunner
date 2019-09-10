@@ -75,7 +75,7 @@ These steps explain how to run regxsression tests in cosimulation.
 From the `bsg_bladerunner` root directory:
 
 ```
-cd bsg_f1/cl_manycore/testbenches/
+cd bsg_f1/testbenches/
 make regression
 ```
 
@@ -92,7 +92,7 @@ regression suites are:
 From `bsg_bladerunner` root directory:
 
 ```
-cd bsg_f1/cl_manycore/testbenches/<subsuite>/
+cd bsg_f1/testbenches/<subsuite>/
 make regression
 ```
 
@@ -101,15 +101,15 @@ make regression
 From `bsg_bladerunner` root directory:
 
 ```
-cd bsg_f1/cl_manycore/testbenches/<subsuite>/
+cd bsg_f1/testbenches/<subsuite>/
 make <test_name> 
 ```
 
 Here's an example in which we run the `test_rom` test in the `library` suite:
 
 ```
-cd bsg_f1/cl_manycore/testbenches/library/
+cd bsg_f1/testbenches/library/
 make test_rom.log
 ```
 
-For each subsuite, tests are list in `bsg_f1/cl_manycore/regression/<suite>/Makefile.tests`
+For each subsuite, tests are list in `bsg_f1/regression/<suite>/Makefile.tests`

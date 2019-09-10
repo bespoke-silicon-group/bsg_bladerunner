@@ -24,18 +24,18 @@ infrastructure. It can be used to:
   an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
 
 * `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
-  in [Makefile.common](Makefile.common)
+  in [project.mk](project.mk)
 
 ## File List
 
 * [Makefile](Makefile) provides targets cloning repositories and building new
 Amazon Machine images.
 
-* [Makefile.amibuild](Makefile.amibuild) provides targets for building and
+* [amibuild.mk](amibuild.mk) provides targets for building and
 installing the manycore tools on a Amazon EC2 instance. Indirectly used by the
 target `build-ami` in [Makefile](Makefile).
 
-* [Makefile.common](Makefile.common) defines paths to each of the submodule
+* [project.mk](project.mk) defines paths to each of the submodule
 dependencies
 
 ## Instructions
@@ -52,7 +52,7 @@ IDs are printed on the command line and in upload.json.
 
 1. Clone this repository.
 
-2. Update the `FPGA_IMAGE_VERSION` variable in [Makefile.common](Makefile.common)
+2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
 to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
 'Version' key in the AMI and AFI Tags.)
 
@@ -68,7 +68,7 @@ Tags.
 
 1. Clone this repository.
 
-2. Update the `FPGA_IMAGE_VERSION` variable in [Makefile.common](Makefile.common)
+2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
 to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
 'Version' key in the AMI and AFI Tags.)
 
@@ -83,7 +83,7 @@ AWS. It is a combination of the steps above.
 
 1. Clone this repository.
 
-2. Update the `FPGA_IMAGE_VERSION` variable in [Makefile.common](Makefile.common)
+2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
 to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
 'Version' key in the AMI and AFI Tags.)
 
@@ -91,7 +91,7 @@ to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for t
 Amazon FPGA Image)
 
 4. Replace the `AGFI_ID` and `AMI_ID` variables in
-[Makefile.common](Makefile.common) with the new values in upload.json (generated
+[project.mk](project.mk) with the new values in upload.json (generated
 by the previous step).
 
 5. Commit your changes and push to a branch
