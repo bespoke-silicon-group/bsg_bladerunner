@@ -20,7 +20,7 @@ help:
 	@echo "         clean: Remove all build files and repositories"
 
 RISCV_DEPS := libmpc autoconf automake libtool curl gmp gawk bison flex \
-	texinfo gperf expat-devel
+	texinfo gperf expat-devel dtc
 # AWS Installation Rules
 update-instance: yum.log
 yum.log: 
