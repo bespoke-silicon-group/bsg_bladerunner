@@ -6,7 +6,7 @@ include bsg_cadenv/cadenv.mk
 export VCS_HOME=$(VCS_MX_HOME)
 endif
 
-include Makefile.common
+include project.mk
 
 .PHONY: all update-instance riscv-tools llvm-install install env-install \
 	xdma-install bsg-install help setup-aws-fpga
