@@ -64,7 +64,11 @@ The new AFI/AGFI IDs are printed on the command line and in upload.json.
    
 These steps will build the Machine image and upload it to
 AWS. `FPGA_IMAGE_VERSION` will be used as the value for the 'Version' key in AMI
-Tags.
+Tags. 
+
+To run these steps, you will need to install the [Amazon Web Services Command
+Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
+user account.
 
 1. Clone this repository.
 
