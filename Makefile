@@ -50,7 +50,13 @@ include project.mk
 .DEFAULT_GOAL := help
 help:
 	@echo "Usage:"
-	@echo "make {build-ami|build-dcp|upload-afi|clean} "
+	@echo "make {setup|setup-uw|build-ami|build-dcp|upload-afi|clean} "
+	@echo "		setup: Build all tools and perform all patching and"
+	@echo "                    updates necessary for cosimulation"
+	@echo "		setup-uw: Same as `setup` but clones bsg-cadenv"
+	@echo "                    to configure the CAD environment for BSG"
+	@echo "                    users. Other users will need to install"
+	@echo "                    Synopsys VCS-MX and Vivado on $PATH"
 	@echo "		build-ami: Build an Amazon Machine Image (AMI) using "
 	@echo "		           the AGFI and AFI in Makefile.deps "
 	@echo "		build-dcp: Compile the FPGA design (locally) with the "

@@ -13,8 +13,12 @@ infrastructure. It can be used to:
 
 ## [Makefile](Makefile) targets
 
-* `checkout-repos`: Clone submodule repositories that are needed for the
-  Manycore/Bladerunner project.
+* setup: Build all tools and perform all patching and updates
+  necessary for cosimulation
+
+* `setup-uw: Same as `setup` but clones bsg-cadenv to configure the
+  CAD environment for BSG users. Other users will need to install
+  Synopsys VCS-MX and Vivado on $PATH
 
 * `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
 
@@ -25,6 +29,8 @@ infrastructure. It can be used to:
 
 * `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
   in [project.mk](project.mk)
+  
+  You can also run `make help` to see all of the available targets in this repository. 
 
 ## File List
 
@@ -40,9 +46,22 @@ dependencies
 
 ## Instructions
 
+### Setup
+
+To run applications in Cosimulation you will need to patch the AWS
+repository and build the RISC-V tools. Fortunately we provide
+automated steps to do this.
+
+If you are an external user, run `make setup`. This will build the
+RISC-V Tools for your machine, and patch the aws-fpga repository.
+
+If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
+the same steps as above, and also clone bsg_cadenv to configure your
+CAD environment.
+
 ### F1 Cosimulation
 
-To run cosimulation see the instructions in COSIM.md
+To run cosimulation see the instructions in [COSIM.md](COSIM.md)
 
 ### Build an Amazon FPGA Image (AFI)
 
