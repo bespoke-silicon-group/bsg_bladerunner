@@ -1,3 +1,30 @@
+# Copyright (c) 2019, University of Washington All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# 
+# Redistributions of source code must retain the above copyright notice, this list
+# of conditions and the following disclaimer.
+# 
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+# 
+# Neither the name of the copyright holder nor the names of its contributors may
+# be used to endorse or promote products derived from this software without
+# specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 DESIGN_NAME := manycore
 BUCKET_NAME := bsgamibuild
 CORNELL_USER_ID := 238771226843
@@ -14,7 +41,7 @@ BRANCH_NAME:=$(shell git symbolic-ref --short HEAD)
 # changes that are not globally visible
 ISDIRTY_CHECK:= $(shell git diff-index --quiet $(ORIGIN_NAME)/$(BRANCH_NAME) --ignore-submodules -- || echo dirty_check)
 
-include Makefile.common
+include project.mk
 
 .PHONY: help clean setup setup-uw dirty_check \
 	build-dcp build-afi print-afi share-afi \
@@ -23,7 +50,13 @@ include Makefile.common
 .DEFAULT_GOAL := help
 help:
 	@echo "Usage:"
-	@echo "make {build-ami|build-dcp|upload-afi|clean} "
+	@echo "make {setup|setup-uw|build-ami|build-dcp|upload-afi|clean} "
+	@echo "		setup: Build all tools and perform all patching and"
+	@echo "                    updates necessary for cosimulation"
+	@echo "		setup-uw: Same as `setup` but clones bsg-cadenv"
+	@echo "                    to configure the CAD environment for BSG"
+	@echo "                    users. Other users will need to install"
+	@echo "                    Synopsys VCS-MX and Vivado on $PATH"
 	@echo "		build-ami: Build an Amazon Machine Image (AMI) using "
 	@echo "		           the AGFI and AFI in Makefile.deps "
 	@echo "		build-dcp: Compile the FPGA design (locally) with the "
@@ -36,7 +69,7 @@ help:
 	@echo "		clean: Remove all build files and repositories"
 
 aws-fpga.setup.log:
-	$(MAKE) -f Makefile.amibuild setup-aws-fpga \
+	$(MAKE) -f amibuild.mk setup-aws-fpga \
 		AWS_FPGA_REPO_DIR=$(BLADERUNNER_ROOT)/aws-fpga
 
 $(DEPENDENCIES): aws-fpga.setup.log
@@ -46,18 +79,16 @@ dirty_check:
 	@echo "Error! this repository is dirty. Push changes before building"
 	@exit 1
 
-CL_MANYCORE_TARBALL := $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar
+CL_MANYCORE_TARBALL := $(BSG_F1_DIR)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar
 
 build-tarball: $(CL_MANYCORE_TARBALL)
 $(CL_MANYCORE_TARBALL): $(DEPENDENCIES)
-	make -C $(BSG_F1_DIR)/cl_$(DESIGN_NAME)/ build \
+	make -C $(BSG_F1_DIR)// build \
 		FPGA_IMAGE_VERSION=$(FPGA_IMAGE_VERSION)
 
 build-afi: $(CL_MANYCORE_TARBALL) upload.json
 
-ifneq ("$(wildcard $(BSG_F1_DIR)/cl_manycore)","")
-include $(BSG_F1_DIR)/cl_manycore/Makefile.machine.include
-endif
+include $(BSG_F1_DIR)/Makefile.machine.include
 # CONFIG STRING uses variables defined in Makefile.machine.include
 CONFIG_STRING  = BSG_MACHINE_GLOBAL_X = $(BSG_MACHINE_GLOBAL_X),
 CONFIG_STRING += BSG_MACHINE_GLOBAL_Y = $(BSG_MACHINE_GLOBAL_Y),
@@ -101,13 +132,14 @@ bsg_cadenv:
 	git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git	
 
 setup: $(DEPENDENCIES) 
-	$(MAKE) -f Makefile.amibuild riscv-tools
+	$(MAKE) -f amibuild.mk riscv-tools
 
 setup-uw: bsg_cadenv setup 
 
 
 clean:
 	rm -rf upload.json
+	make -C bsg_f1 clean
 
 squeakyclean:
 	git submodule deinit $(DEPENDENCIES)

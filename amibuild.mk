@@ -1,3 +1,30 @@
+# Copyright (c) 2019, University of Washington All rights reserved.
+# 
+# Redistribution and use in source and binary forms, with or without modification,
+# are permitted provided that the following conditions are met:
+# 
+# Redistributions of source code must retain the above copyright notice, this list
+# of conditions and the following disclaimer.
+# 
+# Redistributions in binary form must reproduce the above copyright notice, this
+# list of conditions and the following disclaimer in the documentation and/or
+# other materials provided with the distribution.
+# 
+# Neither the name of the copyright holder nor the names of its contributors may
+# be used to endorse or promote products derived from this software without
+# specific prior written permission.
+# 
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 # The following lines of code are purely for runing setup-uw. It searches for
 # bsg_cadenv to configure Vivado and VCS in the environment
 ifneq ("$(wildcard bsg_cadenv/cadenv.mk)","")
@@ -6,7 +33,7 @@ include bsg_cadenv/cadenv.mk
 export VCS_HOME=$(VCS_MX_HOME)
 endif
 
-include Makefile.common
+include project.mk
 
 .PHONY: all update-instance riscv-tools llvm-install install env-install \
 	xdma-install bsg-install help setup-aws-fpga
@@ -57,8 +84,8 @@ $(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR).setup.log
 
 bsg-install: /usr/lib64/libbsg_manycore_runtime.so.1.0
 /usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR).setup.log
-	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/cl_manycore/libraries
-	sudo make -C $(BSG_F1_DIR)/cl_manycore/libraries install
+	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/libraries
+	sudo make -C $(BSG_F1_DIR)/libraries install
 
 env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile.d/bsg.sh /etc/profile.d/bsg-f1.sh
 
@@ -85,7 +112,7 @@ install: update-instance env-install xdma-install bsg-install riscv-tools llvm-i
 	sudo shutdown -h now # Final step
 
 clean:
-	make -C $(BSG_F1_DIR)/cl_manycore/libraries uninstall
+	make -C $(BSG_F1_DIR)/libraries uninstall
 	sudo rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) 
 	sudo rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh,bsg.sh} *.log
 
