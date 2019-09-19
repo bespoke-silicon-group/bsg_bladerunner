@@ -9,7 +9,7 @@ infrastructure. It can be used to:
 
 * Create [Amazon Machine
   Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) with
-  manycore tools and libraries-preinstalled.
+  manycore tools and libraries preinstalled.
 
 ## [Makefile](Makefile) targets
 
@@ -59,9 +59,10 @@ If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
 the same steps as above, and also clone bsg_cadenv to configure your
 CAD environment.
 
-### F1 Cosimulation
+### C/C++ Cosimulation
 
-To run cosimulation see the instructions in [COSIM.md](COSIM.md)
+To run C/C++ cosimulation, and run applications on an RTL simulation of the
+Manycore architecure, see the instructions in [COSIM.md](COSIM.md).
 
 ### Build an Amazon FPGA Image (AFI)
 
@@ -98,32 +99,3 @@ to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for t
 3. Commit changes and push to a branch. (This step is critical!)
 
 4. Run `make build-ami` from inside this repository. 
-
-### To Make a Release
-   
-These steps will build an AMI and an AFI and upload them to
-AWS. It is a combination of the steps above.
-
-1. Clone this repository.
-
-2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
-to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
-'Version' key in the AMI and AFI Tags.)
-
-3. Run `make build-afi` from inside this repository. (See the section Build an
-Amazon FPGA Image)
-
-4. Replace the `AGFI_ID` and `AMI_ID` variables in
-[project.mk](project.mk) with the new values in upload.json (generated
-by the previous step).
-
-5. Commit your changes and push to a branch
-
-6. Run `make build-ami` from inside this repository. (See the section Build an
-Amazon Machine Image)
-
-7. Test the release
-    
-8. Make a PR to `dev` or `master` depending on the state of the release.
-
-9. Apply a tag to the release when it is merged to master
