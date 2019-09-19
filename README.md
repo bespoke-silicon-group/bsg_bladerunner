@@ -64,6 +64,11 @@ CAD environment.
 To run C/C++ cosimulation, and run applications on an RTL simulation of the
 Manycore architecure, see the instructions in [COSIM.md](COSIM.md).
 
+### F1 Execution
+
+To run C/C++ applications on F1, build an AMI & AFI (instructions below), and
+then run `make regression` inside of [bsg_f1](bsg_f1) on the generated AMI.
+
 ### Build an Amazon FPGA Image (AFI)
 
 These steps will build the FPGA image and upload it to AWS. `FPGA_IMAGE_VERSION`
