@@ -13,7 +13,7 @@ infrastructure. It can be used to:
 
 ## [Makefile](Makefile) targets
 
-* setup: Build all tools and perform all patching and updates
+* `setup`: Build all tools and perform all patching and updates
   necessary for cosimulation
 
 * `setup-uw: Same as `setup` but clones bsg-cadenv to configure the
