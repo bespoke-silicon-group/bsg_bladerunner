@@ -35,7 +35,7 @@ endif
 
 include project.mk
 
-.PHONY: all update-instance riscv-tools llvm-install install env-install \
+.PHONY: all update-instance riscv-tools install env-install \
 	xdma-install bsg-install help setup-aws-fpga
 
 .DEFAULT_GOAL := all
@@ -69,11 +69,7 @@ RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
 riscv-tools: $(RISCV_INSTALL_DIR)
 $(RISCV_INSTALL_DIR): 
-	make -C $(RISCV_TOOLS_DIR) install-clean
-
-LLVM_DIR := $(BUILD_PATH)/llvm
-llvm-install: riscv-tools
-	make -C $(BSG_MANYCORE_DIR)/software/mk/ -f Makefile.llvminstall LLVM_DIR=$(LLVM_DIR) RISCV_INSTALL_DIR=$(RISCV_INSTALL_DIR)
+	make -j8 -C $(RISCV_TOOLS_DIR) install-clean
 
 # TODO: Set permissions
 XDMA_KO_FILE := /lib/modules/$(shell uname -r)/extra/xdma.ko
@@ -97,7 +93,7 @@ env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile
 	@echo "export BASEJUMP_STL_DIR=$(BASEJUMP_STL_DIR)" | sudo tee -a $@
 	@echo "export BSG_MANYCORE_DIR=$(BSG_MANYCORE_DIR)" | sudo tee -a $@
 	@echo "export BSG_F1_DIR=$(BSG_F1_DIR)" | sudo tee -a $@
-	@echo "export LLVM_DIR=$(HOME)/bsg_bladerunner/llvm/llvm-install" | sudo tee -a $@
+	@echo "export LLVM_DIR=$(RISCV_TOOLS_DIR)/llvm/llvm-install" | sudo tee -a $@
 
 /etc/profile.d/bsg-f1.sh:
 	sudo mv $(subst bsg,aws,$@) $@
@@ -108,7 +104,7 @@ env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile
 	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh
 
-install: update-instance env-install xdma-install bsg-install riscv-tools llvm-install 
+install: update-instance env-install xdma-install bsg-install riscv-tools
 	sudo shutdown -h now # Final step
 
 clean:
