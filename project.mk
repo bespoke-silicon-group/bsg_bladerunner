@@ -40,6 +40,5 @@ BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short 
 FPGA_IMAGE_VERSION     := 3.4.1
 AWS_FPGA_VERSION       := v1.4.5
 F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := 
-AGFI_ID                := 
-
+AFI_ID                 := afi-0006478ab89782568
+AGFI_ID                := agfi-0f962acc50ea01933
