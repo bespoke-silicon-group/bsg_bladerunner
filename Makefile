@@ -46,6 +46,7 @@ include project.mk
 .PHONY: help clean setup setup-uw dirty_check \
 	build-dcp build-afi print-afi share-afi \
 	build-ami share-ami print-ami checkout-repos \
+	$(DEPENDENCIES)
 
 .DEFAULT_GOAL := help
 help:
@@ -72,9 +73,6 @@ aws-fpga.setup.log:
 	$(MAKE) -f amibuild.mk setup-aws-fpga \
 		AWS_FPGA_REPO_DIR=$(BLADERUNNER_ROOT)/aws-fpga
 
-$(DEPENDENCIES): aws-fpga.setup.log
-	git submodule update --init $@
-
 dirty_check:
 	@echo "Error! this repository is dirty. Push changes before building"
 	@exit 1
@@ -82,13 +80,12 @@ dirty_check:
 CL_MANYCORE_TARBALL := $(BSG_F1_DIR)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar
 
 build-tarball: $(CL_MANYCORE_TARBALL)
-$(CL_MANYCORE_TARBALL): $(DEPENDENCIES)
-	make -C $(BSG_F1_DIR)// build \
-		FPGA_IMAGE_VERSION=$(FPGA_IMAGE_VERSION)
+$(CL_MANYCORE_TARBALL): 
+	make -C $(BSG_F1_DIR) build FPGA_IMAGE_VERSION=$(FPGA_IMAGE_VERSION)
 
 build-afi: $(CL_MANYCORE_TARBALL) upload.json
 
-include $(BSG_F1_DIR)/Makefile.machine.include
+-include $(BSG_F1_DIR)/Makefile.machine.include
 # CONFIG STRING uses variables defined in Makefile.machine.include
 CONFIG_STRING  = BSG_MACHINE_GLOBAL_X = $(BSG_MACHINE_GLOBAL_X),
 CONFIG_STRING += BSG_MACHINE_GLOBAL_Y = $(BSG_MACHINE_GLOBAL_Y),
@@ -116,7 +113,7 @@ endef
 print-ami: $(ISDIRTY_CHECK)
 	@echo $(shell $(call get_current_ami))
 
-build-ami: $(ISDIRTY_CHECK) $(DEPENDENCIES)
+build-ami: $(ISDIRTY_CHECK)
 	$(BSG_F1_DIR)/scripts/amibuild/build.py Bladerunner \
 		bsg_bladerunner@$(BRANCH_NAME) $(AFI_ID) \
 		$(FPGA_IMAGE_VERSION) $(if $(DRY_RUN),-d)
@@ -127,9 +124,11 @@ share-ami: $(ISDIRTY_CHECK)
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
-
 bsg_cadenv:
 	git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git	
+
+$(DEPENDENCIES): aws-fpga.setup.log
+	git submodule update --init $@
 
 setup: $(DEPENDENCIES) 
 	$(MAKE) -f amibuild.mk riscv-tools
