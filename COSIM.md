@@ -35,7 +35,7 @@ This will take some time. Go get lunch.
 
 ### Prerequisites
 
-To run cosimulation you must have Vivado 2018.2 installed and correctly
+To run cosimulation you must have Vivado 2019.1 installed and correctly
 configured in your environment. Typically this is done by running `source
 <path-to-Vivado>/settings64.sh`. 
 
