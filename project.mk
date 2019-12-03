@@ -37,7 +37,7 @@ BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short 
 BASEJUMP_STL_DIR       := $(BLADERUNNER_ROOT)/basejump_stl
 BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
 
-FPGA_IMAGE_VERSION     := 3.5.0
+FPGA_IMAGE_VERSION     := 3.5.1
 F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := afi-00d2304af794a031e
-AGFI_ID                := agfi-07e35bc4e1adc352e
+AFI_ID                 := 
+AGFI_ID                := 
