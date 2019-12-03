@@ -62,7 +62,6 @@ AWS_FPGA_REPO_DIR := $(BLADERUNNER_ROOT)/aws-fpga
 setup-aws-fpga: $(AWS_FPGA_REPO_DIR).setup.log
 $(AWS_FPGA_REPO_DIR).setup.log:
 	git submodule update --init aws-fpga
-	cd $(AWS_FPGA_REPO_DIR); patch -p0 < $(BLADERUNNER_ROOT)/aws-fpga.patch
 	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh > $@
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
