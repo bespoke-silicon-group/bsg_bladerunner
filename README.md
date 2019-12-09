@@ -75,6 +75,10 @@ These steps will build the FPGA image and upload it to AWS. `FPGA_IMAGE_VERSION`
 will be used as the value for the 'Version' key in AFI Tags. The new AFI/AGFI
 IDs are printed on the command line and in upload.json.
 
+To run these steps, you will need to install the [Amazon Web Services Command
+Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
+user account.
+
 1. Clone this repository.
 
 2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
