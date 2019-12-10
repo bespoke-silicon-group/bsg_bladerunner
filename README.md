@@ -44,6 +44,8 @@ target `build-ami` in [Makefile](Makefile).
 * [project.mk](project.mk) defines paths to each of the submodule
 dependencies
 
+* [scripts](scripts): Scripts used to upload Amazon FPGA images (AFIs) and configure Amazon Machine Images (AMIs).
+
 ## Instructions
 
 ### Setup
@@ -108,3 +110,4 @@ to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for t
 3. Commit changes and push to a branch. (This step is critical!)
 
 4. Run `make build-ami` from inside this repository. 
+r
