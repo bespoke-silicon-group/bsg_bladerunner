@@ -92,7 +92,7 @@ CONFIG_STRING += BSG_MACHINE_GLOBAL_Y = $(BSG_MACHINE_GLOBAL_Y),
 CONFIG_STRING += CL_MANYCORE_DIM_X = $(CL_MANYCORE_DIM_X),
 CONFIG_STRING += CL_MANYCORE_DIM_Y = $(CL_MANYCORE_DIM_Y)
 upload.json: $(CL_MANYCORE_TARBALL)
-	$(BSG_F1_DIR)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
+	$(BLADERUNNER_ROOT)/scripts/afiupload/upload.py $(BUILD_PATH) $(DESIGN_NAME) \
 		$(FPGA_IMAGE_VERSION) $< \
 		$(BUCKET_NAME) "BSG AWS F1 Manycore AFI" \
 		$(addprefix -r ,$(DEPENDENCIES)) \
@@ -114,7 +114,7 @@ print-ami: $(ISDIRTY_CHECK)
 	@echo $(shell $(call get_current_ami))
 
 build-ami: $(ISDIRTY_CHECK)
-	$(BSG_F1_DIR)/scripts/amibuild/build.py Bladerunner \
+	$(BLADERUNNER_ROOT)/scripts/amibuild/build.py Bladerunner \
 		bsg_bladerunner@$(BRANCH_NAME) $(AFI_ID) \
 		$(FPGA_IMAGE_VERSION) $(if $(DRY_RUN),-d)
 
