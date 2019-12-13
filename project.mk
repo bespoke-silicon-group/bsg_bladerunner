@@ -27,7 +27,7 @@
 
 DEPENDENCIES           := bsg_manycore bsg_f1 basejump_stl
 
-BLADERUNNER_ROOT       := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BUILD_PATH             := $(BLADERUNNER_ROOT)
 
 BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_f1
