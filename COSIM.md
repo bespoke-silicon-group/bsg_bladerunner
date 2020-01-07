@@ -9,6 +9,12 @@ These steps only need to be done once.
 UW Users must have an SSH Key registered on their bitbucket account, and access
 to the bsg_cadenv repository. The SSH Key will be used to clone the latter.
 
+Non-UW Users will need to run on a machine that already has VCS-MX and
+Vivado on $PATH. See the Non-UW User instructions below.
+
+The Makefiles will warn/fail with appropriate error messages if the
+environment is not configured correctly.
+
 ### Step 1
 
 Clone this repository.
@@ -28,8 +34,7 @@ cd bsg_bladerunner/
 make setup-uw
 ```
 
-This will take some time. Go get lunch.
-
+This will take 20-30 minutes but only needs to be done every release.
 
 ## Setup (For Non-UW Users)
 
@@ -63,12 +68,12 @@ cd bsg_bladerunner/
 make setup
 ```
 
-This will take some time. Go get lunch.
-
+This will take 20-30 minutes but only needs to be done every release.
 
 ## Running Regression/Cosimulation
 
-These steps explain how to run regxsression tests in cosimulation.
+These steps explain how to run regression tests in
+cosimulation. Adding regression tests is not covered in this document.
 
 ### Running the Entire Regression Suite
 
@@ -112,4 +117,6 @@ cd bsg_f1/testbenches/library/
 make test_rom.log
 ```
 
-For each subsuite, tests are list in `bsg_f1/regression/<suite>/Makefile.tests`
+For each subsuite, tests are list in
+`bsg_f1/regression/<suite>/tests.mk`. The C/C++ source files are in
+the same directory.
