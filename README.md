@@ -16,7 +16,7 @@ infrastructure. It can be used to:
 * `setup`: Build all tools and perform all patching and updates
   necessary for cosimulation
 
-* `setup-uw: Same as `setup` but clones bsg-cadenv to configure the
+* `setup-uw`: Same as `setup` but clones bsg-cadenv to configure the
   CAD environment for BSG users. Other users will need to install
   Synopsys VCS-MX and Vivado on $PATH
 
