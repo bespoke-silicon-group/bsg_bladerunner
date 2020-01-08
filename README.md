@@ -50,12 +50,8 @@ dependencies
 
 ### Setup
 
-To run applications in Cosimulation you will need to patch the AWS
-repository and build the RISC-V tools. Fortunately we provide
-automated steps to do this.
-
 If you are an external user, run `make setup`. This will build the
-RISC-V Tools for your machine, and patch the aws-fpga repository.
+RISC-V Tools for your machine and setup the aws-fpga repository.
 
 If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
 the same steps as above, and also clone bsg_cadenv to configure your
