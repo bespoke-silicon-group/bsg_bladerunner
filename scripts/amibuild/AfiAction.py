@@ -25,19 +25,37 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_f1 basejump_stl
+import os
+import json
+from argparse import Action, ArgumentTypeError
+import boto3
+class AfiAction(Action):
+    def __call__(self, parser, namespace, agfi, option_string=None, nargs=None):
+        d = self.validate(agfi[0])
 
-BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-BUILD_PATH             := $(BLADERUNNER_ROOT)
+        setattr(namespace, self.dest, d)
 
-BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_f1
-BSG_F1_COMMIT_ID       := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
-BSG_MANYCORE_DIR       := $(BLADERUNNER_ROOT)/bsg_manycore
-BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
-BASEJUMP_STL_DIR       := $(BLADERUNNER_ROOT)/basejump_stl
-BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
+    def validate(self, agfi):
+        ec2 = boto3.resource('ec2')
+        cli = boto3.client('ec2')
+        rsp = cli.describe_fpga_images(
+            DryRun=False,
+            FpgaImageIds=['afi-044f5fc0792dfe575'],
+            Filters=[
+                {
+            'Name': 'fpga-image-global-id',
+                    'Values': [
+                        'agfi-087dad34c50a15366',
+                    ]
+                },
+            ],
+            MaxResults=5
+        )['FpgaImages']
 
-FPGA_IMAGE_VERSION     := 3.5.1
-F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := afi-0c891e704f30a9e7b
-AGFI_ID                := agfi-0bf3378e03d8ac9bf
+        if(len(rsp) == 0):
+            raise ValueError('Error! AFI {} not found'.format(agfi))
+
+        return {'AGFI' : rsp[0]['FpgaImageGlobalId'],
+                'AFI'  : rsp[0]['FpgaImageId']}
+
+

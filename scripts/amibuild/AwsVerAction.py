@@ -25,19 +25,22 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_f1 basejump_stl
+import os
+from argparse import Action, ArgumentTypeError
+class AwsVerAction(Action):
+    def __call__(self, parser, namespace, v, option_string=None):
+        setattr(namespace, self.dest, self.validate(v[0]))
 
-BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-BUILD_PATH             := $(BLADERUNNER_ROOT)
+    def validate(self, v):
+        if(v[0] is not "v"):
+            raise ValueError("AWS Version must start with 'v'")
 
-BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_f1
-BSG_F1_COMMIT_ID       := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
-BSG_MANYCORE_DIR       := $(BLADERUNNER_ROOT)/bsg_manycore
-BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
-BASEJUMP_STL_DIR       := $(BLADERUNNER_ROOT)/basejump_stl
-BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
-
-FPGA_IMAGE_VERSION     := 3.5.1
-F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := afi-0c891e704f30a9e7b
-AGFI_ID                := agfi-0bf3378e03d8ac9bf
+        if(len(v) != 6 and len(v) != 7):
+            raise ValueError("AWS Version must be a 6 or 7 character string: " +
+                             "v1.4.8 or v1.4.10")
+        try:
+            [maj, min, submin] = v.split(".")
+        except ValueError:
+            raise ValueError("AWS Version must have three numbers")
+            
+        return v

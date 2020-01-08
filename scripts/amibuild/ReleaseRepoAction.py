@@ -25,19 +25,26 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_f1 basejump_stl
+import os
+import git
+from argparse import Action, ArgumentTypeError
+from git import Repo
+from gitdb.exc import BadName
+import tempfile
 
-BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-BUILD_PATH             := $(BLADERUNNER_ROOT)
-
-BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_f1
-BSG_F1_COMMIT_ID       := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
-BSG_MANYCORE_DIR       := $(BLADERUNNER_ROOT)/bsg_manycore
-BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
-BASEJUMP_STL_DIR       := $(BLADERUNNER_ROOT)/basejump_stl
-BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
-
-FPGA_IMAGE_VERSION     := 3.5.1
-F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := afi-0c891e704f30a9e7b
-AGFI_ID                := agfi-0bf3378e03d8ac9bf
+class ReleaseRepoAction(Action):
+        def __call__(self, parser, namespace, repo_at_commit_id, option_string=None):
+                repo, commit = self.validate(repo_at_commit_id[0])
+                release = {"commit": commit, "name":repo}
+                setattr(namespace, self.dest, release)
+        
+        def validate(self, repo_at_commit_id):
+                [name, commit] = repo_at_commit_id.split('@')
+                url = "git@github.com:bespoke-silicon-group/{}.git".format(name)
+                with tempfile.TemporaryDirectory(dir="/tmp/") as d:
+                        r = git.Repo.clone_from(url, d)
+                        try:
+                                r.git.checkout(commit)
+                        except BadName:
+                                raise ValueError("Commit ID argument {} is not in tree of {}".format(commit, name))
+                return (name, commit)

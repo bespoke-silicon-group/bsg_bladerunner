@@ -44,6 +44,8 @@ target `build-ami` in [Makefile](Makefile).
 * [project.mk](project.mk) defines paths to each of the submodule
 dependencies
 
+* [scripts](scripts): Scripts used to upload Amazon FPGA images (AFIs) and configure Amazon Machine Images (AMIs).
+
 ## Instructions
 
 ### Setup
@@ -75,6 +77,10 @@ These steps will build the FPGA image and upload it to AWS. `FPGA_IMAGE_VERSION`
 will be used as the value for the 'Version' key in AFI Tags. The new AFI/AGFI
 IDs are printed on the command line and in upload.json.
 
+To run these steps, you will need to install the [Amazon Web Services Command
+Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
+user account.
+
 1. Clone this repository.
 
 2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
@@ -104,3 +110,4 @@ to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for t
 3. Commit changes and push to a branch. (This step is critical!)
 
 4. Run `make build-ami` from inside this repository. 
+r

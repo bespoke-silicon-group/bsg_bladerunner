@@ -25,19 +25,28 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_f1 basejump_stl
+import os
+import boto3
+from argparse import Action, ArgumentTypeError
+from botocore.client import ClientError
 
-BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
-BUILD_PATH             := $(BLADERUNNER_ROOT)
+class BucketAction(Action):
+    def __call__(self, parser, namespace, buckets, option_string=None, nargs=None):
+        b = self.validate(buckets[0])
+        setattr(namespace, self.dest, b)
 
-BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_f1
-BSG_F1_COMMIT_ID       := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
-BSG_MANYCORE_DIR       := $(BLADERUNNER_ROOT)/bsg_manycore
-BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
-BASEJUMP_STL_DIR       := $(BLADERUNNER_ROOT)/basejump_stl
-BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
+    def validate(self, b):
+        s3 = boto3.resource('s3')
+        s3cli = boto3.client('s3')
 
-FPGA_IMAGE_VERSION     := 3.5.1
-F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := afi-0c891e704f30a9e7b
-AGFI_ID                := agfi-0bf3378e03d8ac9bf
+        if len(b.split()) > 1 or not b.strip().isalnum() or any(c.isupper() for c in b):
+            raise ArgumentTypeError("Invalid Bucket Name: {0} must be an alphanumeric string with no upper-case letters".format(b))
+
+        try:
+            s3.meta.client.head_bucket(Bucket=b)
+        except ClientError:
+            raise ArgumentTypeError("Bucket {} not found").format(b)
+
+        return s3.Bucket(b)
+
+
