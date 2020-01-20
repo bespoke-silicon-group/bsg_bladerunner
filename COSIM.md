@@ -15,6 +15,9 @@ Vivado on $PATH. See the Non-UW User instructions below.
 The Makefiles will warn/fail with appropriate error messages if the
 environment is not configured correctly.
 
+If you are using Vivado 2019.1 you will need to apply this AR solution
+from Xilinx: https://www.xilinx.com/support/answers/72404.html.
+
 ### Step 1
 
 Clone this repository.

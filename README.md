@@ -57,6 +57,10 @@ If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
 the same steps as above, and also clone bsg_cadenv to configure your
 CAD environment.
 
+If you are using Vivado 2019.1 you will need to apply the following AR
+before running cosimulation:
+https://www.xilinx.com/support/answers/72404.html.
+
 ### C/C++ Cosimulation
 
 To run C/C++ cosimulation, and run applications on an RTL simulation of the
