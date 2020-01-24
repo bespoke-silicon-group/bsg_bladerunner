@@ -25,12 +25,12 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_f1 basejump_stl
+DEPENDENCIES           := bsg_manycore bsg_replicant basejump_stl
 
 BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BUILD_PATH             := $(BLADERUNNER_ROOT)
 
-BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_f1
+BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_replicant
 BSG_F1_COMMIT_ID       := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
 BSG_MANYCORE_DIR       := $(BLADERUNNER_ROOT)/bsg_manycore
 BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
