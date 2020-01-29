@@ -39,5 +39,5 @@ BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short 
 
 FPGA_IMAGE_VERSION     := 3.6.0
 F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
-AFI_ID                 := afi-0c865bb42f90e713b
-AGFI_ID                := agfi-0cc81711270686615
+AFI_ID                 := afi-01d3a54a037de0867
+AGFI_ID                := agfi-05a27bcdbad312d25
