@@ -46,9 +46,9 @@ dependencies
 
 * [scripts](scripts): Scripts used to upload Amazon FPGA images (AFIs) and configure Amazon Machine Images (AMIs).
 
-## Instructions
+## Setup
 
-### Setup
+First, [add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
 
 If you are an external user, run `make setup`. This will build the
 RISC-V Tools for your machine and setup the aws-fpga repository.
@@ -57,15 +57,116 @@ If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
 the same steps as above, and also clone bsg_cadenv to configure your
 CAD environment.
 
-### C/C++ Cosimulation
+If you are using Vivado 2019.1 you will need to apply the following AR
+before running cosimulation:
+https://www.xilinx.com/support/answers/72404.html.
+
+### Step 1
+
+Clone this repository.
+
+```
+git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
+```
+
+### Step 2
+
+Checkout correct revisions of dependent projects and build the RISC-V
+toolchain. This will clone bsg_cadenv, which sets the VCS environment for
+cosimulation.
+
+```
+cd bsg_bladerunner/
+make setup-uw
+```
+
+This will take 20-30 minutes but only needs to be done every release.
+
+## Setup (For Non-UW Users)
+
+To use this repository you must have Vivado 2019.1 installed and correctly
+configured in your environment. Typically this is done by running `source
+<path-to-Vivado>/settings64.sh`. 
+
+You must also have VCS-MX correctly installed and configured in your
+environment. Your system administrator can help with this.
+
+In either case, the Makefiles will warn/fail if it cannot find either
+tool.
+
+### Step 1
+
+Clone this repository.
+
+```
+git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
+```
+
+### Step 2
+
+Checkout correct revisions of dependent projects and build the RISC-V
+toolchain. 
+
+```
+cd bsg_bladerunner/
+make setup
+```
+
+## C/C++ Cosimulation
 
 To run C/C++ cosimulation, and run applications on an RTL simulation of the
-Manycore architecure, see the instructions in [COSIM.md](COSIM.md).
+Manycore architecure.
 
-### F1 Execution
+### Running the Entire Regression Suite
+
+From the `bsg_bladerunner` root directory:
+
+```
+cd bsg_replicant/testbenches/
+make regression
+```
+
+### Running a Single Regression Suite
+
+It is also possible to run a single regression suite. At the moment the
+regression suites are:
+
+1. library
+2. spmd
+3. cuda
+4. python
+
+From `bsg_bladerunner` root directory:
+
+```
+cd bsg_replicant/testbenches/<subsuite>/
+make regression
+```
+
+### Running a Single Test
+
+From `bsg_bladerunner` root directory:
+
+```
+cd bsg_replicant/testbenches/<subsuite>/
+make <test_name> 
+```
+
+Here's an example in which we run the `test_rom` test in the `library` suite:
+
+```
+cd bsg_replicant/testbenches/library/
+make test_rom.log
+```
+
+For each subsuite, tests are list in
+`bsg_replicant/regression/<suite>/tests.mk`. The C/C++ source files are in
+the same directory.
+
+## F1 Execution
 
 To run C/C++ applications on F1, build an AMI & AFI (instructions below), and
-then run `make regression` inside of [bsg_f1](bsg_f1) on the generated AMI.
+then run `make regression` inside of [bsg_replicant](bsg_replicant) on the generated AMI.
 
 ### Build an Amazon FPGA Image (AFI)
 
@@ -106,4 +207,3 @@ to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for t
 3. Commit changes and push to a branch. (This step is critical!)
 
 4. Run `make build-ami` from inside this repository. 
-r

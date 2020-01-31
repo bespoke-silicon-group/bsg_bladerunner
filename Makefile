@@ -138,7 +138,7 @@ setup-uw: bsg_cadenv setup
 
 clean:
 	rm -rf upload.json
-	make -C bsg_f1 clean
+	make -C $(BSG_F1_DIR) clean
 
 squeakyclean:
 	git submodule deinit $(DEPENDENCIES)
