@@ -10,9 +10,6 @@
 [submodule "aws-fpga"]
 	path = aws-fpga
 	url = git@github.com:aws/aws-fpga.git
-[submodule "graph500"]
-	path = graph500
-	url = git@github.com:bespoke-silicon-group/graph500
 [submodule "hbgraphs"]
 	path = hbgraphs
 	url = git@github.com:mrutt92/hbgraphs
