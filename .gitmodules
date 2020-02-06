@@ -13,3 +13,6 @@
 [submodule "hbgraphs"]
 	path = hbgraphs
 	url = git@github.com:mrutt92/hbgraphs
+[submodule "graph500"]
+	path = graph500
+	url = git@github.com:bespoke-silicon-group/graph500
