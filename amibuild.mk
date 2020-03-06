@@ -99,7 +99,7 @@ env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile
 	sudo sed -i 's/src\/project_data/bsg_bladerunner/' $@ 
 
 /etc/profile.d/profile.d_bsg.sh: $(AWS_FPGA_REPO_DIR).setup.log
-	sudo cp $(BSG_F1_DIR)/scripts/amibuild/profile.d_bsg.sh $@
+	sudo cp $(BLADERUNNER_ROOT)/scripts/amibuild/profile.d_bsg.sh $@
 	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh
 
