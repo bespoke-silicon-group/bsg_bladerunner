@@ -44,14 +44,14 @@ ISDIRTY_CHECK:= $(shell git diff-index --quiet $(ORIGIN_NAME)/$(BRANCH_NAME) --i
 include project.mk
 
 .PHONY: help clean setup setup-uw dirty_check \
-	build-dcp build-afi print-afi share-afi \
+	build-tarball build-afi print-afi share-afi \
 	build-ami share-ami print-ami checkout-repos \
 	$(DEPENDENCIES)
 
 .DEFAULT_GOAL := help
 help:
 	@echo "Usage:"
-	@echo "make {setup|setup-uw|build-ami|build-dcp|upload-afi|clean} "
+	@echo "make {setup|setup-uw|build-ami|build-tarball|upload-afi|clean} "
 	@echo "		setup: Build all tools and perform all patching and"
 	@echo "                    updates necessary for cosimulation"
 	@echo "		setup-uw: Same as `setup` but clones bsg-cadenv"
@@ -60,7 +60,7 @@ help:
 	@echo "                    Synopsys VCS-MX and Vivado on $PATH"
 	@echo "		build-ami: Build an Amazon Machine Image (AMI) using "
 	@echo "		           the AGFI and AFI in Makefile.deps "
-	@echo "		build-dcp: Compile the FPGA design (locally) with the "
+	@echo "		build-tarball: Compile the FPGA design (locally) with the "
 	@echo "		           hashes and repositories in Makefile.deps "
 	@echo "		build-afi: Upload the compiled FPGA design into S3 "
 	@echo "		           and create an Amazon FPGA Image (AFI) "
