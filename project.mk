@@ -25,7 +25,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_replicant basejump_stl
+DEPENDENCIES           := bsg_manycore bsg_replicant basejump_stl verilator
 
 BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BUILD_PATH             := $(BLADERUNNER_ROOT)
