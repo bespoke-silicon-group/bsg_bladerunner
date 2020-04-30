@@ -13,21 +13,30 @@ infrastructure. It can be used to:
 
 ## HammerBlade Overview
 
-HammerBlade is a scalable data-processing architecture. Each
-HammerBlade Node is a single System-on-Chip composed from an array of
-tiles interconnected by a 2-D mesh network. The architectural HDL is
-in the [BSG Manycore
-Repository](https://github.com/bespoke-silicon-group/bsg_manycore) and
-the [BaseJump
-STL](https://github.com/bespoke-silicon-group/basejump_stl)
-repositories.
+HammerBlade is an open-source manycore architecture for performing
+efficient computation on large general-purpose workloads. A
+HammerBlade is composed of nodes attached to a general purpose host,
+simliar to a general-purpose GPU. Each node is a single an array of
+tiles interconnected by a 2-D mesh network attached to a flexible
+memory system.
 
-HammerBlade is a Single-Program, Multiple-Data (SPMD) machine.
-Programs are written in C/C++ and executed on the tiles. The host
-runtime launches these programs in parallel groups, and sequential
-grids. C/C++ and Python host programs can interact with a
-Cooperatively Simulated (Cosimulated) HammerBlade Node using Synopysis
-VCS. The HammerBlade Runtime and Cosimulation top levels are in [BSG
+HammerBlade is a Single-Program, Multiple-Data (SPMD) architecture:
+All tiles execute the same program on a different set of input data to
+complete a larger computation kernel. Programs are written in the
+CUDA-Lite lanaguage (C/C++) and executed on the tiles in parallel
+"groups", and sequential "grids". The CUDA-Lite host runtime (C/C++)
+manages execution parallel and sequential execution. 
+
+The HammerBlade is being integrated with higher-level parallel
+frameworks and Domain-Specific Languages. A Pytorch
+[Pytorch](https://github.com/pytorch/pytorch) backend is being
+developed to accelerate Machine Learning and a
+[Graphit](https://github.com/GraphIt-DSL/graphit) code-generator is
+being developed to support Graph Computations.
+
+C/C++, Python, and Pytorch programs can interact with a Cooperatively
+Simulated (Cosimulated) HammerBlade Node using Synopysis VCS. The
+HammerBlade Runtime and Cosimulation top levels are in [BSG
 Replicant](https://github.com/bespoke-silicon-group/bsg_replicant)
 repository.
 
@@ -35,8 +44,12 @@ For a more in-depth overview of the HammerBlade architecture, see the
 [HammerBlade
 Overview](https://docs.google.com/document/d/1wpdx0FykCyIAL3VdJEBz0tK-aQyChW0TKdHfbIXQJQI/edit).
 
-For technical details about the HammerBlade architecture, see the
-[HammerBlade Technical Reference
+The architectural HDL for HammerBlade is in the [BSG Manycore
+Repository](https://github.com/bespoke-silicon-group/bsg_manycore) and
+the [BaseJump
+STL](https://github.com/bespoke-silicon-group/basejump_stl)
+repositories. For technical details about the HammerBlade
+architecture, see the [HammerBlade Technical Reference
 Manual](https://docs.google.com/document/d/1b2g2nnMYidMkcn6iHJ9NGjpQYfZeWEmMdLeO_3nLtgo)
 
 To run cosimulation or build FPGA images from this repository, follow
