@@ -3,39 +3,56 @@
 This repository tracks releases of the HammerBlade source code and
 infrastructure. It can be used to:
 
-* Compile and Simulate FPGA Designs
+* Simulate HammerBlade Nodes of diverse sizes and memory types
 
-* Generate [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
+* Generate HammerBlade [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
 
 * Create [Amazon Machine
-  Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) with
-  manycore tools and libraries preinstalled.
+  Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
+  with pre-installed tools and libraries
 
-## [Makefile](Makefile) targets
+## HammerBlade Overview
 
-* `setup`: Build all tools and perform all patching and updates
-  necessary for cosimulation
+HammerBlade is a scalable data-processing architecture. Each
+HammerBlade Node is a single System-on-Chip composed from an array of
+tiles interconnected by a 2-D mesh network. The architectural HDL is
+in the [BSG Manycore
+Repository](https://github.com/bespoke-silicon-group/bsg_manycore) and
+the [BaseJump
+STL](https://github.com/bespoke-silicon-group/basejump_stl)
+repositories.
 
-* `setup-uw`: Same as `setup` but clones bsg-cadenv to configure the
-  CAD environment for BSG users. Other users will need to install
-  Synopsys VCS-MX and Vivado on $PATH
+HammerBlade is a Single-Program, Multiple-Data (SPMD) machine.
+Programs are written in C/C++ and executed on the tiles. The host
+runtime launches these programs in parallel groups, and sequential
+grids. C/C++ and Python host programs can interact with a
+Cooperatively Simulated (Cosimulated) HammerBlade Node using Synopysis
+VCS. The HammerBlade Runtime and Cosimulation top levels are in [BSG
+Replicant](https://github.com/bespoke-silicon-group/bsg_replicant)
+repository.
 
-* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
+For a more in-depth overview of the HammerBlade architecture, see the
+[HammerBlade
+Overview](https://docs.google.com/document/d/1wpdx0FykCyIAL3VdJEBz0tK-aQyChW0TKdHfbIXQJQI/edit).
 
-* `build-tarball` : Compiles the manycore design (locally) as a tarball
+For technical details about the HammerBlade architecture, see the
+[HammerBlade Technical Reference
+Manual](https://docs.google.com/document/d/1b2g2nnMYidMkcn6iHJ9NGjpQYfZeWEmMdLeO_3nLtgo)
 
-* `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
-  an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
+To run cosimulation or build FPGA images from this repository, follow
+the instructions in
+[Setup](https://github.com/bespoke-silicon-group/bsg_bladerunner#setup)
+and then the relevant sections for
+[Cosimulation](https://github.com/bespoke-silicon-group/bsg_bladerunner#cc-cosimulation)
+or [F1
+Execution](https://github.com/bespoke-silicon-group/bsg_bladerunner#f1-execution)
 
-* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
-  in [project.mk](project.mk)
-  
-  You can also run `make help` to see all of the available targets in this repository. 
+## Repository File List
 
-## File List
-
-* [Makefile](Makefile) provides targets cloning repositories and building new
-Amazon Machine images.
+* [Makefile](Makefile) provides targets cloning repositories and
+building new Amazon Machine images. See the section on [Makefile
+Targets](https://github.com/bespoke-silicon-group/bsg_bladerunner#makefile-targets)
+for more information.
 
 * [amibuild.mk](amibuild.mk) provides targets for building and
 installing the manycore tools on a Amazon EC2 instance. Indirectly used by the
@@ -207,3 +224,23 @@ to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for t
 3. Commit changes and push to a branch. (This step is critical!)
 
 4. Run `make build-ami` from inside this repository. 
+
+## [Makefile](Makefile) targets
+
+* `setup`: Build all tools and updates necessary for cosimulation
+
+* `setup-uw`: Same as `setup` but clones bsg-cadenv to configure the
+  CAD environment for BSG users. Other users will need to install
+  Synopsys VCS-MX and Vivado on $PATH
+
+* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
+
+* `build-tarball` : Compiles the manycore design (locally) as a tarball
+
+* `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
+  an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
+
+* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
+  in [project.mk](project.mk)
+  
+  You can also run `make help` to see all of the available targets in this repository. 
