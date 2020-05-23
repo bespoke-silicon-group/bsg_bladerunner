@@ -3,32 +3,14 @@
 This repository tracks releases of the HammerBlade source code and
 infrastructure. It can be used to:
 
-* Compile and Simulate FPGA Designs
-
-* Generate [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
-
-* Create [Amazon Machine
-  Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html) with
-  manycore tools and libraries preinstalled.
+* Compile and Simulate HammerBlade Manycore Designs
 
 ## [Makefile](Makefile) targets
 
 * `setup`: Build all tools and perform all patching and updates
   necessary for cosimulation
 
-* `setup-uw`: Same as `setup` but clones bsg-cadenv to configure the
-  CAD environment for BSG users. Other users will need to install
-  Synopsys VCS-MX and Vivado on $PATH
-
-* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
-
-* `build-tarball` : Compiles the manycore design (locally) as a tarball
-
-* `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
-  an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
-
-* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
-  in [project.mk](project.mk)
+* `verilator-exe`: Build the verilator toolchain
   
   You can also run `make help` to see all of the available targets in this repository. 
 
