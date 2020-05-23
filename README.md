@@ -48,69 +48,11 @@ dependencies
 
 ## Setup
 
-First, [add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
+1. First, [add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
 
-If you are an external user, run `make setup`. This will build the
-RISC-V Tools for your machine and setup the aws-fpga repository.
+2. Run `make setup`. This will build the RISC-V Tools for your machine.
 
-If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
-the same steps as above, and also clone bsg_cadenv to configure your
-CAD environment.
-
-If you are using Vivado 2019.1 you will need to apply the following AR
-before running cosimulation:
-https://www.xilinx.com/support/answers/72404.html.
-
-### Step 1
-
-Clone this repository.
-
-```
-git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
-```
-
-### Step 2
-
-Checkout correct revisions of dependent projects and build the RISC-V
-toolchain. This will clone bsg_cadenv, which sets the VCS environment for
-cosimulation.
-
-```
-cd bsg_bladerunner/
-make setup-uw
-```
-
-This will take 20-30 minutes but only needs to be done every release.
-
-## Setup (For Non-UW Users)
-
-To use this repository you must have Vivado 2019.1 installed and correctly
-configured in your environment. Typically this is done by running `source
-<path-to-Vivado>/settings64.sh`. 
-
-You must also have VCS-MX correctly installed and configured in your
-environment. Your system administrator can help with this.
-
-In either case, the Makefiles will warn/fail if it cannot find either
-tool.
-
-### Step 1
-
-Clone this repository.
-
-```
-git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
-```
-
-### Step 2
-
-Checkout correct revisions of dependent projects and build the RISC-V
-toolchain. 
-
-```
-cd bsg_bladerunner/
-make setup
-```
+3. Run `make verilator-exe`. This will build a recent version of Verilator.
 
 ## C/C++ Cosimulation
 
@@ -163,47 +105,3 @@ For each subsuite, tests are list in
 `bsg_replicant/regression/<suite>/tests.mk`. The C/C++ source files are in
 the same directory.
 
-## F1 Execution
-
-To run C/C++ applications on F1, build an AMI & AFI (instructions below), and
-then run `make regression` inside of [bsg_replicant](bsg_replicant) on the generated AMI.
-
-### Build an Amazon FPGA Image (AFI)
-
-These steps will build the FPGA image and upload it to AWS. `FPGA_IMAGE_VERSION`
-will be used as the value for the 'Version' key in AFI Tags. The new AFI/AGFI
-IDs are printed on the command line and in upload.json.
-
-To run these steps, you will need to install the [Amazon Web Services Command
-Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
-user account.
-
-1. Clone this repository.
-
-2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
-to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
-'Version' key in the AMI and AFI Tags.)
-
-3. Run `make build-afi` from inside this repository. 
-
-The new AFI/AGFI IDs are printed on the command line and in upload.json.
-
-### Build an Amazon Machine Image (AMI)
-   
-These steps will build the Machine image and upload it to
-AWS. `FPGA_IMAGE_VERSION` will be used as the value for the 'Version' key in AMI
-Tags. 
-
-To run these steps, you will need to install the [Amazon Web Services Command
-Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
-user account.
-
-1. Clone this repository.
-
-2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
-to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
-'Version' key in the AMI and AFI Tags.)
-
-3. Commit changes and push to a branch. (This step is critical!)
-
-4. Run `make build-ami` from inside this repository. 

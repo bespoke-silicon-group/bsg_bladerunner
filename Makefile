@@ -127,7 +127,7 @@ share-ami: $(ISDIRTY_CHECK)
 bsg_cadenv:
 	git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git	
 
-$(DEPENDENCIES): aws-fpga.setup.log
+$(DEPENDENCIES): 
 	git submodule update --init $@
 
 setup: $(DEPENDENCIES) 
