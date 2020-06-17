@@ -135,6 +135,10 @@ setup: $(DEPENDENCIES)
 
 setup-uw: bsg_cadenv setup 
 
+export VERILATOR_ROOT="$(abspath $(BLADERUNNER_ROOT)/verilator)"
+verilator-exe: verilator
+	cd $< && autoconf && ./configure
+	$(MAKE) -C verilator
 
 clean:
 	rm -rf upload.json
