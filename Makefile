@@ -127,7 +127,7 @@ share-ami: $(ISDIRTY_CHECK)
 export VERILATOR_ROOT="$(abspath $(BLADERUNNER_ROOT)/verilator)"
 verilator-exe: $(VERILATOR_ROOT)/bin/verilator_bin
 $(VERILATOR_ROOT)/bin/verilator_bin:
-	cd $< && autoconf && ./configure
+	cd $(VERILATOR_ROOT) && autoconf && ./configure
 	$(MAKE) -C verilator
 
 clean:
