@@ -61,8 +61,7 @@ AWS_FPGA_REPO_URL ?= https://github.com/aws/aws-fpga.git
 AWS_FPGA_REPO_DIR := $(BLADERUNNER_ROOT)/aws-fpga
 setup-aws-fpga: $(AWS_FPGA_REPO_DIR).setup.log
 $(AWS_FPGA_REPO_DIR).setup.log:
-	git submodule update --init aws-fpga
-	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh > $@
+	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh > .$@ && cp .$@ $@
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/

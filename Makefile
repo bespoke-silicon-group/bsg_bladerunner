@@ -124,11 +124,9 @@ share-ami: $(ISDIRTY_CHECK)
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
-setup: verilator-exe
-	$(MAKE) -f amibuild.mk riscv-tools
-
 export VERILATOR_ROOT="$(abspath $(BLADERUNNER_ROOT)/verilator)"
-verilator-exe: verilator
+verilator-exe: $(VERILATOR_ROOT)/bin/verilator_bin
+$(VERILATOR_ROOT)/bin/verilator_bin:
 	cd $< && autoconf && ./configure
 	$(MAKE) -C verilator
 

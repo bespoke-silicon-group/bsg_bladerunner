@@ -7,8 +7,7 @@ infrastructure. It can be used to:
 
 * Generate HammerBlade [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
 
-* Create [Amazon Machine
-  Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
+* Create [Amazon Machine Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
   with pre-installed tools and libraries
 
 ## HammerBlade Overview
@@ -53,13 +52,74 @@ repositories. For technical details about the HammerBlade
 architecture, see the [HammerBlade Technical Reference
 Manual](https://docs.google.com/document/d/1b2g2nnMYidMkcn6iHJ9NGjpQYfZeWEmMdLeO_3nLtgo)
 
-To run cosimulation or build FPGA images from this repository, follow
-the instructions in
-[Setup](https://github.com/bespoke-silicon-group/bsg_bladerunner#setup)
-and then the relevant sections for
-[Cosimulation](https://github.com/bespoke-silicon-group/bsg_bladerunner#cc-cosimulation)
-or [F1
-Execution](https://github.com/bespoke-silicon-group/bsg_bladerunner#f1-execution)
+To run simulated applications on HammerBlade, or build FPGA images
+from this repository, follow the instructions below:
+
+## Requirements
+
+To use this repository you must have Vivado 2019.1 installed and correctly
+configured in your environment. 
+
+If you are using Vivado 2019.1 you will need to apply the following AR
+before running simulation: https://www.xilinx.com/support/answers/72404.html.
+
+You must also have VCS-MX correctly installed and configured in your
+environment. Your system administrator can help with this.
+
+The Makefiles will warn/fail if it cannot find either tool.
+
+
+## Setup: VCS
+
+**Non-Bespoke Silicon Group (BSG) users MUST have Vivado and VCS installed before these steps**
+
+VCS simulates the FPGA design that is compiled for AWS F1 and uses Vivado IP.
+
+1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
+
+2. Initialize the submodules: `git submodule update --init --recursive`
+
+3. (BSG Users Only: `git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git`)
+
+4. Run `make aws-fpga.setup.log`
+
+5. Run `make -f amibuild.mk riscv-tools`
+
+
+## Setup: Verilator (Beta) 
+
+Verilator simulates the HammerBlade architecture using C/C++ DPI
+functions instead of AWS F1 and Vivado IP.
+
+1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
+
+2. Initialize the submodules: `git submodule update --init --recursive`
+
+3. Run `make verilator-exe`
+
+4. Run `make -f amibuild.mk riscv-tools`
+
+
+## Examples
+
+See [bsg_replicant/README.md](bsg_replicant/README.md)
+
+
+## [Makefile](Makefile) targets
+
+* `setup`: Build all tools and updates necessary for cosimulation
+
+* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
+
+* `build-tarball` : Compiles the manycore design (locally) as a tarball
+
+* `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
+  an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
+
+* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
+  in [project.mk](project.mk)
+  
+  You can also run `make help` to see all of the available targets in this repository. 
 
 ## Repository File List
 
@@ -77,159 +137,3 @@ dependencies
 
 * [scripts](scripts): Scripts used to upload Amazon FPGA images (AFIs) and configure Amazon Machine Images (AMIs).
 
-## Setup
-
-1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
-
-2. Initialize the submodules: `git submodule update --init --recursive`
-
-3. (BSG Users Only: `git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git`)
-
-4. Run `make setup`
-
-
-## NOTES:
-
-To use this repository you must have Vivado 2019.1 installed and correctly
-configured in your environment. Typically this is done by running `source
-<path-to-Vivado>/settings64.sh`. 
-
-If you are using Vivado 2019.1 you will need to apply the following AR
-before running cosimulation:
-https://www.xilinx.com/support/answers/72404.html.
-
-You must also have VCS-MX correctly installed and configured in your
-environment. Your system administrator can help with this.
-
-In either case, the Makefiles will warn/fail if it cannot find either
-tool.
-
-
-### Step 1
-
-Clone this repository.
-
-```
-git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
-```
-
-
-## Setup (For Non-UW Users)
-
-
-
-## C/C++ Cosimulation
-
-To run C/C++ cosimulation, and run applications on an RTL simulation of the
-Manycore architecure.
-
-### Running the Entire Regression Suite
-
-From the `bsg_bladerunner` root directory:
-
-```
-cd bsg_replicant/testbenches/
-make regression
-```
-
-### Running a Single Regression Suite
-
-It is also possible to run a single regression suite. At the moment the
-regression suites are:
-
-1. library
-2. spmd
-3. cuda
-4. python
-
-From `bsg_bladerunner` root directory:
-
-```
-cd bsg_replicant/testbenches/<subsuite>/
-make regression
-```
-
-### Running a Single Test
-
-From `bsg_bladerunner` root directory:
-
-```
-cd bsg_replicant/testbenches/<subsuite>/
-make <test_name> 
-```
-
-Here's an example in which we run the `test_rom` test in the `library` suite:
-
-```
-cd bsg_replicant/testbenches/library/
-make test_rom.log
-```
-
-For each subsuite, tests are list in
-`bsg_replicant/regression/<suite>/tests.mk`. The C/C++ source files are in
-the same directory.
-
-## F1 Execution
-
-To run C/C++ applications on F1, build an AMI & AFI (instructions below), and
-then run `make regression` inside of [bsg_replicant](bsg_replicant) on the generated AMI.
-
-### Build an Amazon FPGA Image (AFI)
-
-These steps will build the FPGA image and upload it to AWS. `FPGA_IMAGE_VERSION`
-will be used as the value for the 'Version' key in AFI Tags. The new AFI/AGFI
-IDs are printed on the command line and in upload.json.
-
-To run these steps, you will need to install the [Amazon Web Services Command
-Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
-user account.
-
-1. Clone this repository.
-
-2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
-to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
-'Version' key in the AMI and AFI Tags.)
-
-3. Run `make build-afi` from inside this repository. 
-
-The new AFI/AGFI IDs are printed on the command line and in upload.json.
-
-### Build an Amazon Machine Image (AMI)
-   
-These steps will build the Machine image and upload it to
-AWS. `FPGA_IMAGE_VERSION` will be used as the value for the 'Version' key in AMI
-Tags. 
-
-To run these steps, you will need to install the [Amazon Web Services Command
-Line Interface (CLI)](https://aws.amazon.com/cli/) and configure it for your
-user account.
-
-1. Clone this repository.
-
-2. Update the `FPGA_IMAGE_VERSION` variable in [project.mk](project.mk)
-to avoid naming conflicts. (`FPGA_IMAGE_VERSION` will be used as the value for the
-'Version' key in the AMI and AFI Tags.)
-
-3. Commit changes and push to a branch. (This step is critical!)
-
-4. Run `make build-ami` from inside this repository. 
-
-## [Makefile](Makefile) targets
-
-* `setup`: Build all tools and updates necessary for cosimulation
-
-* `setup-uw`: Same as `setup` but clones bsg-cadenv to configure the
-  CAD environment for BSG users. Other users will need to install
-  Synopsys VCS-MX and Vivado on $PATH
-
-* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
-
-* `build-tarball` : Compiles the manycore design (locally) as a tarball
-
-* `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
-  an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
-
-* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
-  in [project.mk](project.mk)
-  
-  You can also run `make help` to see all of the available targets in this repository. 
