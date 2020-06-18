@@ -57,14 +57,11 @@ from this repository, follow the instructions below:
 
 ## Requirements
 
-To use this repository you must have Vivado 2019.1 installed and correctly
-configured in your environment. 
+To simulate with VCS you must have VCS-MX and Vivado 2019.1 installed
+and correctly configured in your environment.
 
 If you are using Vivado 2019.1 you will need to apply the following AR
 before running simulation: https://www.xilinx.com/support/answers/72404.html.
-
-You must also have VCS-MX correctly installed and configured in your
-environment. Your system administrator can help with this.
 
 The Makefiles will warn/fail if it cannot find either tool.
 
