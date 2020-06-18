@@ -35,8 +35,9 @@ developed to accelerate Machine Learning and a
 being developed to support Graph Computations.
 
 C/C++, Python, and Pytorch programs can interact with a Cooperatively
-Simulated (Cosimulated) HammerBlade Node using Synopysis VCS. The
-HammerBlade Runtime and Cosimulation top levels are in [BSG
+Simulated (Cosimulated) HammerBlade Node using Synopysis VCS or
+Verilator. 
+The HammerBlade Runtime and Cosimulation top levels are in [BSG
 Replicant](https://github.com/bespoke-silicon-group/bsg_replicant)
 repository.
 
@@ -78,45 +79,24 @@ dependencies
 
 ## Setup
 
-First, [add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
+1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
 
-If you are an external user, run `make setup`. This will build the
-RISC-V Tools for your machine and setup the aws-fpga repository.
+2. Initialize the submodules: `git submodule update --init --recursive`
 
-If you are in Bespoke Silicon Group, run `make setup-uw`. This will do
-the same steps as above, and also clone bsg_cadenv to configure your
-CAD environment.
+3. (BSG Users Only: `git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git`)
 
-If you are using Vivado 2019.1 you will need to apply the following AR
-before running cosimulation:
-https://www.xilinx.com/support/answers/72404.html.
+4. Run `make setup`
 
-### Step 1
 
-Clone this repository.
-
-```
-git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
-```
-
-### Step 2
-
-Checkout correct revisions of dependent projects and build the RISC-V
-toolchain. This will clone bsg_cadenv, which sets the VCS environment for
-cosimulation.
-
-```
-cd bsg_bladerunner/
-make setup-uw
-```
-
-This will take 20-30 minutes but only needs to be done every release.
-
-## Setup (For Non-UW Users)
+## NOTES:
 
 To use this repository you must have Vivado 2019.1 installed and correctly
 configured in your environment. Typically this is done by running `source
 <path-to-Vivado>/settings64.sh`. 
+
+If you are using Vivado 2019.1 you will need to apply the following AR
+before running cosimulation:
+https://www.xilinx.com/support/answers/72404.html.
 
 You must also have VCS-MX correctly installed and configured in your
 environment. Your system administrator can help with this.
@@ -124,6 +104,7 @@ environment. Your system administrator can help with this.
 In either case, the Makefiles will warn/fail if it cannot find either
 tool.
 
+
 ### Step 1
 
 Clone this repository.
@@ -132,15 +113,10 @@ Clone this repository.
 git clone https://github.com/bespoke-silicon-group/bsg_bladerunner
 ```
 
-### Step 2
 
-Checkout correct revisions of dependent projects and build the RISC-V
-toolchain. 
+## Setup (For Non-UW Users)
 
-```
-cd bsg_bladerunner/
-make setup
-```
+
 
 ## C/C++ Cosimulation
 
