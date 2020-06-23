@@ -75,6 +75,11 @@ distributions:
 
 ```libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf expat-devel dtc cmake3```
 
+On debian-based distributions, the following packages are required:
+
+```libmpc-dev autoconf automake libtool curl libgmp-dev gawk bison flex texinfo gperf libexpat-dev device-tree-compiler cmake build-essential```
+
+
 ## Setup: VCS
 
 **Non-Bespoke Silicon Group (BSG) users MUST have Vivado and VCS installed before these steps**
