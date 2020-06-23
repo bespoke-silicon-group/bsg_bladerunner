@@ -57,6 +57,8 @@ from this repository, follow the instructions below:
 
 ## Requirements
 
+### CAD Tools
+
 To simulate with VCS you must have VCS-MX and Vivado 2019.1 installed
 and correctly configured in your environment.
 
@@ -65,6 +67,13 @@ before running simulation: https://www.xilinx.com/support/answers/72404.html.
 
 The Makefiles will warn/fail if it cannot find either tool.
 
+### Packages
+
+Building the RISC-V Toolchain requires several distribution
+packages. The following are required for CentOS/RHEL-based
+distributions:
+
+```libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf expat-devel dtc cmake3```
 
 ## Setup: VCS
 
