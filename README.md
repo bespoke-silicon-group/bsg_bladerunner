@@ -60,7 +60,11 @@ from this repository, follow the instructions below:
 ### CAD Tools
 
 To simulate with VCS you must have VCS-MX and Vivado 2019.1 installed
-and correctly configured in your environment.
+and correctly configured in your environment. 
+
+The Vivado tools must have the Virtex Ultrascale + Family device files
+installed. See page 40 [in this
+guide](https://www.xilinx.com/content/dam/xilinx/support/documentation/sw_manuals/xilinx2019_1/ug973-vivado-release-notes-install-license.pdf)
 
 If you are using Vivado 2019.1 you will need to apply the following AR
 before running simulation: https://www.xilinx.com/support/answers/72404.html.
