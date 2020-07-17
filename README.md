@@ -77,11 +77,11 @@ Building the RISC-V Toolchain requires several distribution
 packages. The following are required for CentOS/RHEL-based
 distributions:
 
-```libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf expat-devel dtc cmake3```
+```libmpc autoconf automake libtool curl gmp gawk bison flex texinfo gperf expat-devel dtc cmake3 python3-devel```
 
 On debian-based distributions, the following packages are required:
 
-```libmpc-dev autoconf automake libtool curl libgmp-dev gawk bison flex texinfo gperf libexpat-dev device-tree-compiler cmake build-essential```
+```libmpc-dev autoconf automake libtool curl libgmp-dev gawk bison flex texinfo gperf libexpat-dev device-tree-compiler cmake build-essential python3-dev```
 
 
 ## Setup: VCS
