@@ -3,6 +3,7 @@ package_update: true
 package_upgrade: true
 packages:
  - emacs
+ - git
  - vim
  - python36-devel
  - https://repo.ius.io/ius-release-el7.rpm
