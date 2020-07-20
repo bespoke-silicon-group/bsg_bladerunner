@@ -79,7 +79,7 @@ $(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR).setup.log
 bsg-install: /usr/lib64/libbsg_manycore_runtime.so.1.0
 /usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR).setup.log
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/libraries
-	sudo make -C $(BSG_F1_DIR)/libraries install BSG_PLATFORM=aws-fpga
+	sudo -E make -C $(BSG_F1_DIR)/libraries install BSG_PLATFORM=aws-fpga
 
 env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile.d/bsg.sh /etc/profile.d/bsg-f1.sh
 
