@@ -6,6 +6,8 @@ packages:
  - vim
  - python36-devel
  - https://repo.ius.io/ius-release-el7.rpm
+ - centos-release-scl
+ - devtoolset-8
 
 runcmd:
  - 'sudo su - centos -c "ssh-keyscan github.com >> ~/.ssh/known_hosts"'
