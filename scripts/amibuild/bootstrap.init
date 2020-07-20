@@ -11,7 +11,7 @@ packages:
 
 runcmd:
  - 'sudo yum-config-manager --enable rhel-server-rhscl-7-rpms'
- - 'sudo yum install devtoolset-8'
+ - 'sudo yum -y install devtoolset-8'
  - 'sudo su - centos -c "ssh-keyscan github.com >> ~/.ssh/known_hosts"'
  - 'sudo su - centos -c "git clone git@github.com:bespoke-silicon-group/$release_repo.git"'
  - 'sudo su - centos -c "git clone git@github.com:bespoke-silicon-group/$release_repo.git"'
