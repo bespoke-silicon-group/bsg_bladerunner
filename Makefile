@@ -124,17 +124,11 @@ share-ami: $(ISDIRTY_CHECK)
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
-bsg_cadenv:
-	git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git	
-
-$(DEPENDENCIES): aws-fpga.setup.log
-	git submodule update --init $@
-
-setup: $(DEPENDENCIES) 
-	$(MAKE) -f amibuild.mk riscv-tools
-
-setup-uw: bsg_cadenv setup 
-
+export VERILATOR_ROOT="$(abspath $(BLADERUNNER_ROOT)/verilator)"
+verilator-exe: $(VERILATOR_ROOT)/bin/verilator_bin
+$(VERILATOR_ROOT)/bin/verilator_bin:
+	cd $(VERILATOR_ROOT) && autoconf && ./configure
+	$(MAKE) -C verilator
 
 clean:
 	rm -rf upload.json

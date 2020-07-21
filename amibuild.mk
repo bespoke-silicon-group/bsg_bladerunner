@@ -61,8 +61,7 @@ AWS_FPGA_REPO_URL ?= https://github.com/aws/aws-fpga.git
 AWS_FPGA_REPO_DIR := $(BLADERUNNER_ROOT)/aws-fpga
 setup-aws-fpga: $(AWS_FPGA_REPO_DIR).setup.log
 $(AWS_FPGA_REPO_DIR).setup.log:
-	git submodule update --init aws-fpga
-	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh > $@
+	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh | tee $@.temp && mv $@.temp $@
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
 RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
@@ -80,7 +79,7 @@ $(XDMA_KO_FILE): update-instance $(AWS_FPGA_REPO_DIR).setup.log
 bsg-install: /usr/lib64/libbsg_manycore_runtime.so.1.0
 /usr/lib64/libbsg_manycore_runtime.so.1.0: $(AWS_FPGA_REPO_DIR).setup.log
 	. $(AWS_FPGA_REPO_DIR)/sdk_setup.sh && make -C $(BSG_F1_DIR)/libraries
-	sudo make -C $(BSG_F1_DIR)/libraries install
+	sudo -E make -C $(BSG_F1_DIR)/libraries install BSG_PLATFORM=aws-fpga AGFI=$(AGFI_ID)
 
 env-install: /etc/profile.d/profile.d_bsg.sh /etc/profile.d/agfi.sh /etc/profile.d/bsg.sh /etc/profile.d/bsg-f1.sh
 
