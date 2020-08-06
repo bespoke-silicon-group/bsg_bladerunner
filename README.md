@@ -59,17 +59,20 @@ from this repository, follow the instructions below:
 
 ### CAD Tools
 
-To simulate with VCS you must have VCS-MX and Vivado 2019.1 installed
-and correctly configured in your environment. 
+* To simulate with VCS you must have VCS-MX installed. (After 2019,
+  VCS-MX is included with VCS)
 
-The Vivado tools must have the Virtex Ultrascale + Family device files
+* Verilator is built as part of the setup process.
+
+* To simulate or compile our AWS design, you must have Vivado 2019.1
+installed and correctly configured in your environment. The Vivado
+tools must have the Virtex Ultrascale + Family device files
 installed. See page 40 [in this
 guide](https://www.xilinx.com/content/dam/xilinx/support/documentation/sw_manuals/xilinx2019_1/ug973-vivado-release-notes-install-license.pdf)
-
 If you are using Vivado 2019.1 you will need to apply the following AR
 before running simulation: https://www.xilinx.com/support/answers/72404.html.
 
-The Makefiles will warn/fail if it cannot find either tool.
+The Makefiles will warn/fail if it cannot find the appropriate tools.
 
 ### Packages
 
@@ -84,7 +87,36 @@ On debian-based distributions, the following packages are required:
 ```libmpc-dev autoconf automake libtool curl libgmp-dev gawk bison flex texinfo gperf libexpat-dev device-tree-compiler cmake build-essential python3-dev```
 
 
-## Setup: VCS
+## Setup: VCS (No AWS Simulation)
+
+**Non-Bespoke Silicon Group (BSG) users MUST have Vivado and VCS installed before these steps**
+
+The default VCS environment simulates the manycore architecture, without any closed-source or encrypted IP. 
+
+1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
+
+2. Initialize the submodules: `git submodule update --init --recursive`
+
+3. (BSG Users Only: `git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git`)
+
+4. Run `make -f amibuild.mk riscv-tools`
+
+
+## Setup: Verilator (Beta)
+
+Verilator simulates the HammerBlade architecture using C/C++ DPI
+functions instead of AWS F1 and Vivado IP.
+
+1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
+
+2. Initialize the submodules: `git submodule update --init --recursive`
+
+3. Run `make verilator-exe`
+
+4. Run `make -f amibuild.mk riscv-tools`
+
+
+## Setup: VCS (AWS)
 
 **Non-Bespoke Silicon Group (BSG) users MUST have Vivado and VCS installed before these steps**
 
@@ -99,20 +131,6 @@ VCS simulates the FPGA design that is compiled for AWS F1 and uses Vivado IP.
 4. Run `make aws-fpga.setup.log`
 
 5. Run `make -f amibuild.mk riscv-tools`
-
-
-## Setup: Verilator (Beta) 
-
-Verilator simulates the HammerBlade architecture using C/C++ DPI
-functions instead of AWS F1 and Vivado IP.
-
-1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
-
-2. Initialize the submodules: `git submodule update --init --recursive`
-
-3. Run `make verilator-exe`
-
-4. Run `make -f amibuild.mk riscv-tools`
 
 
 ## Examples
