@@ -113,7 +113,7 @@ endef
 print-ami: $(ISDIRTY_CHECK)
 	@echo $(shell $(call get_current_ami))
 
-build-ami: $(ISDIRTY_CHECK)
+build-ami: #$(ISDIRTY_CHECK)
 	$(BLADERUNNER_ROOT)/scripts/amibuild/build.py Bladerunner \
 		bsg_bladerunner@$(BRANCH_NAME) $(AFI_ID) \
 		$(FPGA_IMAGE_VERSION) $(if $(DRY_RUN),-d)
