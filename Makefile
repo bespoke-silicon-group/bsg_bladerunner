@@ -46,7 +46,7 @@ include project.mk
 .PHONY: help clean setup setup-uw dirty_check \
 	build-tarball build-afi print-afi share-afi \
 	build-ami share-ami print-ami checkout-repos \
-	$(DEPENDENCIES)
+	setup-container $(DEPENDENCIES)
 
 .DEFAULT_GOAL := help
 help:
@@ -76,6 +76,9 @@ aws-fpga.setup.log:
 dirty_check:
 	@echo "Error! this repository is dirty. Push changes before building"
 	@exit 1
+
+setup-container:
+	make -C ./Container build
 
 CL_MANYCORE_TARBALL := $(BSG_F1_DIR)/build/checkpoints/to_aws/cl_$(DESIGN_NAME).Developer_CL.tar
 
