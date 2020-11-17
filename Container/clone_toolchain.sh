@@ -1,3 +1,4 @@
+#!/bin/env bash
 TOOLCHAIN_REPO=riscv-gnu-toolchain
 TOOLCHAIN_URL=https://github.com/bespoke-silicon-group/$TOOLCHAIN_REPO
 TOOLCHAIN_VERSION=656708846d723936eb5ba2648f6f919608a8ccaf
