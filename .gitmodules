@@ -1,6 +1,6 @@
 [submodule "bsg_f1"]
 	path = bsg_replicant
-	url = git@github.com:bespoke-silicon-group/bsg_f1.git
+	url = git@github.com:bespoke-silicon-group/bsg_replicant.git
 [submodule "bsg_manycore"]
 	path = bsg_manycore
 	url = git@github.com:bespoke-silicon-group/bsg_manycore.git
@@ -13,3 +13,6 @@
 [submodule "verilator"]
 	path = verilator
 	url = https://github.com/verilator/verilator.git
+[submodule "black-parrot"]
+	path = black-parrot
+	url = git@github.com:black-parrot/black-parrot.git
