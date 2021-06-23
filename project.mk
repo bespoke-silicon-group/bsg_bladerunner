@@ -25,19 +25,21 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-DEPENDENCIES           := bsg_manycore bsg_replicant basejump_stl black-parrot
+DEPENDENCIES           := bsg_manycore bsg_replicant basejump_stl black-parrot black-parrot-sdk
 
 BLADERUNNER_ROOT       := $(abspath $(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 BUILD_PATH             := $(BLADERUNNER_ROOT)
 
-BSG_F1_DIR             := $(BLADERUNNER_ROOT)/bsg_replicant
-BSG_F1_COMMIT_ID       := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
-BSG_MANYCORE_DIR       := $(BLADERUNNER_ROOT)/bsg_manycore
-BSG_MANYCORE_COMMIT_ID := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
-BASEJUMP_STL_DIR       := $(BLADERUNNER_ROOT)/basejump_stl
-BASEJUMP_STL_COMMIT_ID := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
-BLACKPARROT_DIR        := $(BLADERUNNER_ROOT)/black-parrot
-BLACKPARROT_COMMIT_ID  := $(shell cd $(BLACKPARROT_DIR); git rev-parse --short HEAD)
+BSG_F1_DIR                := $(BLADERUNNER_ROOT)/bsg_replicant
+BSG_F1_COMMIT_ID          := $(shell cd $(BSG_F1_DIR); git rev-parse --short HEAD)
+BSG_MANYCORE_DIR          := $(BLADERUNNER_ROOT)/bsg_manycore
+BSG_MANYCORE_COMMIT_ID    := $(shell cd $(BSG_MANYCORE_DIR); git rev-parse --short HEAD)
+BASEJUMP_STL_DIR          := $(BLADERUNNER_ROOT)/basejump_stl
+BASEJUMP_STL_COMMIT_ID    := $(shell cd $(BASEJUMP_STL_DIR); git rev-parse --short HEAD)
+BLACKPARROT_DIR           := $(BLADERUNNER_ROOT)/black-parrot
+BLACKPARROT_COMMIT_ID     := $(shell cd $(BLACKPARROT_DIR); git rev-parse --short HEAD)
+BLACKPARROT_SDK_DIR       := $(BLADERUNNER_ROOT)/black-parrot-sdk
+BLACKPARROT_SDK_COMMIT_ID := $(shell cd $(BLACKPARROT_SDK_DIR); git rev-parse --short HEAD)
 
 FPGA_IMAGE_VERSION     := 4.3.1
 F12XLARGE_TEMPLATE_ID  := lt-01bc73811e48f0b26
