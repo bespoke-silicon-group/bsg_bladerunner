@@ -46,8 +46,7 @@ repositories. For technical details about the HammerBlade
 architecture, see the [HammerBlade Technical Reference
 Manual](https://docs.google.com/document/d/1b2g2nnMYidMkcn6iHJ9NGjpQYfZeWEmMdLeO_3nLtgo)
 
-To run simulated applications on HammerBlade, or build FPGA images
-from this repository, follow the instructions below:
+To run applications on HammerBlade follow the instructions below:
 
 ## Requirements
 
@@ -75,7 +74,7 @@ On debian-based distributions, the following packages are required:
 
 ## Setup: VCS
 
-**Non-Bespoke Silicon Group (BSG) users MUST have VCS installed on PATH before these steps**
+**Non Bespoke Silicon Group (BSG) users MUST have VCS installed on PATH before these steps**
 
 The default VCS environment simulates the manycore architecture, without any closed-source or encrypted IP. 
 
