@@ -1,14 +1,8 @@
 # BSG Bladerunner
 
 This repository tracks releases of the HammerBlade source code and
-infrastructure. It can be used to:
-
-* Simulate HammerBlade Nodes of diverse sizes and memory types
-
-* Generate HammerBlade [Amazon FPGA Images](https://aws.amazon.com/ec2/instance-types/f1/)
-
-* Create [Amazon Machine Images](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html)
-  with pre-installed tools and libraries
+infrastructure. It can be used to simulate HammerBlade Nodes of
+diverse sizes and memory types.
 
 ## HammerBlade Overview
 
@@ -52,8 +46,7 @@ repositories. For technical details about the HammerBlade
 architecture, see the [HammerBlade Technical Reference
 Manual](https://docs.google.com/document/d/1b2g2nnMYidMkcn6iHJ9NGjpQYfZeWEmMdLeO_3nLtgo)
 
-To run simulated applications on HammerBlade, or build FPGA images
-from this repository, follow the instructions below:
+To run applications on HammerBlade follow the instructions below:
 
 ## Requirements
 
@@ -63,14 +56,6 @@ from this repository, follow the instructions below:
   VCS-MX is included with VCS)
 
 * Verilator is built as part of the setup process.
-
-* To simulate or compile our AWS design, you must have Vivado 2019.1
-installed and correctly configured in your environment. The Vivado
-tools must have the Virtex Ultrascale + Family device files
-installed. See page 40 [in this
-guide](https://www.xilinx.com/content/dam/xilinx/support/documentation/sw_manuals/xilinx2019_1/ug973-vivado-release-notes-install-license.pdf)
-If you are using Vivado 2019.1 you will need to apply the following AR
-before running simulation: https://www.xilinx.com/support/answers/72404.html.
 
 The Makefiles will warn/fail if it cannot find the appropriate tools.
 
@@ -87,9 +72,9 @@ On debian-based distributions, the following packages are required:
 ```libmpc-dev autoconf automake libtool curl libgmp-dev gawk bison flex texinfo gperf libexpat-dev device-tree-compiler cmake build-essential python3-dev```
 
 
-## Setup: VCS (No AWS Simulation)
+## Setup: VCS
 
-**Non-Bespoke Silicon Group (BSG) users MUST have Vivado and VCS installed before these steps**
+**Non Bespoke Silicon Group (BSG) users MUST have VCS installed on PATH before these steps**
 
 The default VCS environment simulates the manycore architecture, without any closed-source or encrypted IP. 
 
@@ -97,15 +82,14 @@ The default VCS environment simulates the manycore architecture, without any clo
 
 2. Initialize the submodules: `git submodule update --init --recursive`
 
-3. (BSG Users Only: `git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git`)
+3. (BSG Users Only: `git clone git@github.com:bespoke-silicon-group/bsg_cadenv.git`)
 
 4. Run `make -f amibuild.mk riscv-tools`
 
 
 ## Setup: Verilator (Beta)
 
-Verilator simulates the HammerBlade architecture using C/C++ DPI
-functions instead of AWS F1 and Vivado IP.
+Verilator simulates the HammerBlade architecture using C/C++ transpilation.
 
 1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
 
@@ -116,23 +100,6 @@ functions instead of AWS F1 and Vivado IP.
 4. Run `make -f amibuild.mk riscv-tools`
 
 
-## Setup: VCS (AWS)
-
-**Non-Bespoke Silicon Group (BSG) users MUST have Vivado and VCS installed before these steps**
-
-VCS simulates the FPGA design that is compiled for AWS F1 and uses Vivado IP.
-
-1. [Add SSH Keys to your GitHub account](https://help.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account). 
-
-2. Initialize the submodules: `git submodule update --init --recursive`
-
-3. (BSG Users Only: `git clone git@bitbucket.org:taylor-bsg/bsg_cadenv.git`)
-
-4. Run `make aws-fpga.setup.log`
-
-5. Run `make -f amibuild.mk riscv-tools`
-
-
 ## Examples
 
 See [bsg_replicant/README.md](bsg_replicant/README.md)
@@ -141,32 +108,22 @@ See [bsg_replicant/README.md](bsg_replicant/README.md)
 ## [Makefile](Makefile) targets
 
 * `setup`: Build all tools and updates necessary for cosimulation
-
-* `build-ami` : Builds the Amazon Machine Image (AMI) and emits the AMI ID.
-
-* `build-tarball` : Compiles the manycore design (locally) as a tarball
-
-* `build-afi` : Uploads a Design Checkpoint (DCP) to AWS and processes it into
-  an Amazon FPGA Image (AFI) with an Amazon Global FPGA Image ID (AGFI)
-
-* `print-ami` : Prints the current AMI whose version matches `FPGA_IMAGE_VERSION`
-  in [project.mk](project.mk)
   
   You can also run `make help` to see all of the available targets in this repository. 
 
 ## Repository File List
 
 * [Makefile](Makefile) provides targets cloning repositories and
-building new Amazon Machine images. See the section on [Makefile
+setting up the repository. See the section on [Makefile
 Targets](https://github.com/bespoke-silicon-group/bsg_bladerunner#makefile-targets)
 for more information.
-
-* [amibuild.mk](amibuild.mk) provides targets for building and
-installing the manycore tools on a Amazon EC2 instance. Indirectly used by the
-target `build-ami` in [Makefile](Makefile).
 
 * [project.mk](project.mk) defines paths to each of the submodule
 dependencies
 
 * [scripts](scripts): Scripts used to upload Amazon FPGA images (AFIs) and configure Amazon Machine Images (AMIs).
 
+
+## Notes:
+
+   AWS FPGA support has been deprecated, though the files remain for posterity.
