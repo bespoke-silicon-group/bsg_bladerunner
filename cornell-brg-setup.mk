@@ -1,3 +1,4 @@
+BLADERUNNER_PATH=$(shell git rev-parse --show-toplevel)
 RISCV_INSTALL_PATH=bsg_manycore/software/riscv-tools/riscv-install
 LLVM_INSTALL_PATH=bsg_manycore/software/riscv-tools/llvm
 
@@ -18,10 +19,12 @@ bsg_cadenv:
 	git clone git@github.com:bespoke-silicon-group/bsg_cadenv
 
 $(RISCV_INSTALL_PATH): submodule_init
-	ln -s ../bsg_bladerunner_cornell-brg/$(RISCV_INSTALL_PATH) $(RISCV_INSTALL_PATH)
+	rm -f $@
+	ln -s $(BLADERUNNER_PATH)/../bsg_bladerunner_cornell-brg/$(RISCV_INSTALL_PATH) $@	
 
 $(LLVM_INSTALL_PATH): submodule_init
-	ln -s ../bsg_bladerunner_cornell-brg/$(LLVM_INSTALL_PATH) $(LLVM_INSTALL_PATH) 
+	rm -f $@
+	ln -s $(BLADERUNNER_PATH)/../bsg_bladerunner_cornell-brg/$(LLVM_INSTALL_PATH) $@
 
 riscv-toolchain: riscv-tools llvm
 
