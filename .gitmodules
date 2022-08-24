@@ -1,9 +1,9 @@
 [submodule "bsg_f1"]
 	path = bsg_replicant
-	url = git@github.com:bespoke-silicon-group/bsg_f1.git
+	url = git@github.com:cornell-brg/bsg_f1.git
 [submodule "bsg_manycore"]
 	path = bsg_manycore
-	url = git@github.com:bespoke-silicon-group/bsg_manycore.git
+	url = git@github.com:cornell-brg/bsg_manycore.git
 [submodule "basejump_stl"]
 	path = basejump_stl
 	url = git@github.com:bespoke-silicon-group/basejump_stl
