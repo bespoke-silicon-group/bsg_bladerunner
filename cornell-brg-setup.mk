@@ -17,10 +17,10 @@ all: manycore_init
 bsg_cadenv:
 	git clone git@github.com:bespoke-silicon-group/bsg_cadenv
 
-riscv-tools: submodule_init
+$(RISCV_INSTALL_PATH): submodule_init
 	ln -s ../bsg_bladerunner_cornell-brg/$(RISCV_INSTALL_PATH) $(RISCV_INSTALL_PATH)
 
-llvm: submodule_init
+$(LLVM_INSTALL_PATH): submodule_init
 	ln -s ../bsg_bladerunner_cornell-brg/$(LLVM_INSTALL_PATH) $(LLVM_INSTALL_PATH) 
 
 riscv-toolchain: riscv-tools llvm
