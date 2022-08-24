@@ -26,7 +26,7 @@ $(LLVM_INSTALL_PATH): submodule_init
 	rm -f $@
 	ln -s $(BLADERUNNER_PATH)/../bsg_bladerunner_cornell-brg/$(LLVM_INSTALL_PATH) $@
 
-riscv-toolchain: riscv-tools llvm
+riscv-toolchain: $(RISCV_INSTALL_PATH) $(LLVM_INSTALL_PATH)
 
 basejump_init: submodule_init
 	$(MAKE) -C basejump_stl/imports DRAMSim3
