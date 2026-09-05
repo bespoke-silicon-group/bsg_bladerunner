@@ -43,6 +43,17 @@ ISDIRTY_CHECK:= $(shell git diff-index --quiet $(ORIGIN_NAME)/$(BRANCH_NAME) --i
 
 include project.mk
 
+ifneq ($(words $(BLADERUNNER_ROOT)),1)
+$(error BSG Bladerunner does not support whitespace in its checkout path; clone it into a path such as $$HOME/hammerblade/bsg_bladerunner)
+endif
+
+ifeq ($(shell uname),Darwin)
+HOMEBREW_PREFIX ?= $(shell command -v brew >/dev/null 2>&1 && brew --prefix)
+ifneq ($(HOMEBREW_PREFIX),)
+export PATH := $(HOMEBREW_PREFIX)/opt/bison/bin:$(HOMEBREW_PREFIX)/opt/flex/bin:$(HOMEBREW_PREFIX)/opt/m4/bin:$(HOMEBREW_PREFIX)/opt/texinfo/bin:$(PATH)
+endif
+endif
+
 .PHONY: help clean setup setup-uw dirty_check \
 	build-tarball build-afi print-afi share-afi \
 	build-ami share-ami print-ami checkout-repos \
@@ -124,11 +135,11 @@ share-ami: $(ISDIRTY_CHECK)
 		--attribute launchPermission --operation-type add \
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
-export VERILATOR_ROOT="$(abspath $(BLADERUNNER_ROOT)/verilator)"
+export VERILATOR_ROOT := $(abspath $(BLADERUNNER_ROOT)/verilator)
 verilator-exe: $(VERILATOR_ROOT)/bin/verilator_bin
 $(VERILATOR_ROOT)/bin/verilator_bin:
 	cd $(VERILATOR_ROOT) && autoconf && ./configure
-	$(MAKE) -C verilator
+	$(MAKE) -C $(VERILATOR_ROOT) verilator_exe
 
 clean:
 	rm -rf upload.json

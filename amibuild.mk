@@ -35,7 +35,7 @@ endif
 
 include project.mk
 
-.PHONY: all update-instance riscv-tools install env-install \
+.PHONY: all update-instance riscv-gcc riscv-tools install env-install \
 	xdma-install bsg-install help setup-aws-fpga
 
 .DEFAULT_GOAL := all
@@ -64,10 +64,11 @@ $(AWS_FPGA_REPO_DIR).setup.log:
 	. $(AWS_FPGA_REPO_DIR)/hdk_setup.sh | tee $@.temp && mv $@.temp $@
 
 RISCV_TOOLS_DIR=$(BSG_MANYCORE_DIR)/software/riscv-tools/
-RISCV_INSTALL_DIR=$(RISCV_TOOLS_DIR)/riscv-install/
-riscv-tools: $(RISCV_INSTALL_DIR)
-$(RISCV_INSTALL_DIR): 
-	make -j8 -C $(RISCV_TOOLS_DIR) install-clean
+riscv-gcc:
+	$(MAKE) -C $(RISCV_TOOLS_DIR) install-gcc
+
+riscv-tools:
+	$(MAKE) -j8 -C $(RISCV_TOOLS_DIR) install-clean
 
 # TODO: Set permissions
 XDMA_KO_FILE := /lib/modules/$(shell uname -r)/extra/xdma.ko
@@ -109,4 +110,3 @@ clean:
 	make -C $(BSG_F1_DIR)/libraries uninstall
 	sudo rm -rf $(BSG_MANYCORE_DIR) $(BSG_IP_CORES_DIR) $(BSG_F1_DIR) 
 	sudo rm -rf /etc/profile.d/{profile.d_bsg.sh,agfi.sh,bsg.sh} *.log
-

@@ -71,6 +71,17 @@ On debian-based distributions, the following packages are required:
 
 ```libmpc-dev autoconf automake libtool curl libgmp-dev gawk bison flex texinfo gperf libexpat-dev device-tree-compiler cmake build-essential python3-dev```
 
+On macOS, install the Xcode Command Line Tools and Homebrew, then install:
+
+```sh
+brew install autoconf automake libtool gawk bison flex texinfo gperf expat dtc cmake make python wget argp-standalone gmp mpfr libmpc pkgconf gnu-sed m4
+```
+
+HammerBlade's makefiles do not support whitespace in the checkout path. Use a
+path such as `~/hammerblade/bsg_bladerunner` rather than a directory whose name
+contains spaces. Homebrew installs current GNU Make as `gmake`; use `gmake` for
+the commands below on macOS.
+
 
 ## Setup: VCS
 
@@ -98,6 +109,33 @@ Verilator simulates the HammerBlade architecture using C/C++ transpilation.
 3. Run `make verilator-exe`
 
 4. Run `make -f amibuild.mk riscv-tools`
+
+### macOS (Apple Silicon and Intel)
+
+The repository pins a tested release from the authoritative
+[Verilator repository](https://github.com/verilator/verilator) and builds it
+from source. A GitHub SSH key is not required for this setup:
+
+```sh
+mkdir -p ~/hammerblade
+git clone https://github.com/bespoke-silicon-group/bsg_bladerunner.git \
+  ~/hammerblade/bsg_bladerunner
+cd ~/hammerblade/bsg_bladerunner
+git -c url.https://github.com/.insteadOf=git@github.com: \
+  submodule update --init --recursive
+gmake verilator-exe
+./verilator/bin/verilator --version
+```
+
+Build the customized GCC and newlib toolchain needed by the examples. This is
+the longest setup step:
+
+```sh
+gmake -f amibuild.mk riscv-gcc
+```
+
+The broader `riscv-tools` target also builds Spike and the customized LLVM tree;
+those components are not required for the Verilator warmup.
 
 
 ## Examples
