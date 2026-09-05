@@ -137,16 +137,16 @@ gmake -f amibuild.mk riscv-gcc
 The broader `riscv-tools` target also builds Spike and the customized LLVM tree;
 those components are not required for the Verilator warmup.
 
-For a conservative first application run, build the execution model with one
-Verilator worker thread:
+On macOS, the execution model defaults to one Verilator worker thread:
 
 ```sh
-gmake VERILATOR_THREADS=1 exec.log
+gmake exec.log
 ```
 
-The default is 16 threads. The setting is fixed when a machine model is
-generated, so run `gmake platform.link.clean` before rebuilding that machine
-with a different thread count.
+Other hosts continue to default to 16 workers. Override the count explicitly,
+for example with `gmake VERILATOR_THREADS=4 exec.log`, after benchmarking the
+specific model. The selected count is stored with the generated execution
+model, and changing it automatically invalidates and rebuilds that model.
 
 
 ## Examples
