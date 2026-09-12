@@ -5,3 +5,8 @@ bsg_cadenv
 aws-fpga.setup.log
 __pycache__
 upload.json
+/build/
+/install/
+/llvm-project/
+/hb-gcc/
+/hb-llvm/
