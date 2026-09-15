@@ -74,7 +74,7 @@ On debian-based distributions, the following packages are required:
 On macOS, install the Xcode Command Line Tools and Homebrew, then install:
 
 ```sh
-brew install autoconf automake libtool gawk bison flex texinfo gperf expat dtc cmake make python wget argp-standalone gmp mpfr libmpc pkgconf gnu-sed m4
+brew install autoconf automake libtool gawk bison flex texinfo gperf expat dtc cmake make python wget xz argp-standalone gmp mpfr libmpc pkgconf gnu-sed m4
 ```
 
 HammerBlade's makefiles do not support whitespace in the checkout path. Use a
@@ -136,6 +136,12 @@ gmake -f amibuild.mk riscv-gcc
 
 The broader `riscv-tools` target also builds Spike and the customized LLVM tree;
 those components are not required for the Verilator warmup.
+
+For the current pinned HammerBlade LLVM 22 compiler and a complete 16×8
+HammerBench comparison, follow [the fresh-checkout guide](docs/macos-hammerbench.md).
+Use `gmake -f llvm22.mk llvm22-install`; the historical `riscv-tools` LLVM
+installer targets an older Linux development environment and is not the
+LLVM 22 build path.
 
 On macOS, the execution model defaults to one Verilator worker thread:
 
