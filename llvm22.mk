@@ -3,7 +3,7 @@
 include project.mk
 
 LLVM22_REPOSITORY ?= https://github.com/bespoke-silicon-group/llvm-project.git
-LLVM22_REVISION ?= 0ee3b2946133808704dee5ca0b5ea12601454068
+LLVM22_REVISION ?= 7286564fede1bf7b8243bb51bfa039731aa62da6
 LLVM22_SOURCE_DIR ?= $(BLADERUNNER_ROOT)/llvm-project
 LLVM22_BUILD_DIR ?= $(BLADERUNNER_ROOT)/build/llvm22
 LLVM22_INSTALL_DIR ?= $(BLADERUNNER_ROOT)/install/llvm22
