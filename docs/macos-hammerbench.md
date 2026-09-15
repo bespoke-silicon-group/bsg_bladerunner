@@ -27,12 +27,33 @@ gmake -f simulator.mk -j6 sim-profile
 ```
 
 `llvm22.mk` pins the merged HammerBlade LLVM 22.1.8 source at
-`0ee3b2946133808704dee5ca0b5ea12601454068`. It uses the macOS host Clang,
+[`7286564fede1bf7b8243bb51bfa039731aa62da6`](https://github.com/bespoke-silicon-group/llvm-project/commit/7286564fede1bf7b8243bb51bfa039731aa62da6)
+([LLVM #10](https://github.com/bespoke-silicon-group/llvm-project/pull/10)).
+Its source tree is identical to the validated policy foundation `dae290d28617`;
+it does not include the pending runtime-unrolling candidate in LLVM #11.
+It uses the macOS host Clang,
 builds only the RISC-V backend and required tools, and installs them under
 `install/llvm22`. GNU GCC 9.2/newlib/binutils remain necessary for runtime
 objects, assembler sources, and final linking with either device compiler.
 The old Linux/LLVM 10 installer is not used. All source/build/install directories
 and host compilers in `llvm22.mk` can be overridden explicitly.
+
+Existing installations are not updated by merging a source pin. The source
+target rejects a checkout at another revision rather than overwriting it.
+Preserve existing compiler products and use fresh paths for an isolated install:
+
+```sh
+gmake -f llvm22.mk llvm22-install LLVM22_JOBS=6 \
+  LLVM22_SOURCE_DIR="$BR/llvm-project-policy" \
+  LLVM22_BUILD_DIR="$BR/build/llvm22-policy" \
+  LLVM22_INSTALL_DIR="$BR/install/llvm22-policy"
+```
+
+Select that installation explicitly with `RISCV_LLVM_PATH` when building
+applications. The 2026-09-12 fresh-source audit and its 68 passing GCC/LLVM
+application executions used the earlier LLVM `0ee3b2946133`. Those measurements
+retain their original compiler identity; this pin update is not a new benchmark
+run or an automatic update of previously installed binaries.
 
 The selected hardware has one physical 16×8 pod, 32 blocking 32-KiB v-cache
 banks, iPoly hashing enabled, and hardware barriers enabled. It uses the
