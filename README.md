@@ -108,7 +108,31 @@ Verilator simulates the HammerBlade architecture using C/C++ transpilation.
 
 3. Run `make verilator-exe`
 
-4. Run `make -f amibuild.mk riscv-tools`
+4. Run `make -f amibuild.mk riscv-gcc`
+
+### AlmaLinux 9 (x86-64)
+
+The [AlmaLinux setup bundle](scripts/alma9/README.md) separates system packages
+from independent user-owned HammerBlade checkouts. It provides a DNF prerequisite
+installer, pinned source/tool builds, execution and profiling checks, and a
+wrapper that selects one checkout's tools and runtime libraries. GitHub device
+authorization can be completed on another computer; the scripts do not launch a
+browser on the server.
+
+From `scripts/alma9`, after configuring GitHub access if needed:
+
+```sh
+bash install-alma9-prerequisites.sh
+HB_MACHINE_NAME=pod_X1Y1_ruche_X16Y8_hbm_one_pseudo_channel \
+  bash setup-hammerblade.sh all "$HOME/hb-16x8"
+bash validate-hammerblade.sh "$HOME/hb-16x8"
+```
+
+The default is a smaller physical 4x2 model; the explicit selection above uses
+the 16x8 reference. Keep different machine configurations in separate complete
+checkouts because some generated libraries are shared within each checkout.
+The broader `riscv-tools` target also builds historical LLVM/Spike components
+that are unnecessary for this GCC-based setup.
 
 ### macOS (Apple Silicon and Intel)
 
