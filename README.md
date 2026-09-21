@@ -108,13 +108,40 @@ Verilator simulates the HammerBlade architecture using C/C++ transpilation.
 
 3. Run `make verilator-exe`
 
-4. Run `make -f amibuild.mk riscv-tools`
+4. Run `make -f amibuild.mk riscv-gcc`
+
+### AlmaLinux 9 (x86-64)
+
+The [AlmaLinux setup bundle](scripts/alma9/README.md) separates system packages
+from independent user-owned HammerBlade checkouts. It provides a DNF prerequisite
+installer, pinned source/tool builds, execution and profiling checks, and a
+wrapper that selects one checkout's tools and runtime libraries. GitHub device
+authorization can be completed on another computer; the scripts do not launch a
+browser on the server.
+
+From `scripts/alma9`, after configuring GitHub access if needed:
+
+```sh
+bash install-alma9-prerequisites.sh
+HB_MACHINE_NAME=pod_X1Y1_ruche_X16Y8_hbm_one_pseudo_channel \
+  bash setup-hammerblade.sh all "$HOME/hb-16x8"
+bash validate-hammerblade.sh "$HOME/hb-16x8"
+```
+
+The default is a smaller physical 4x2 model; the explicit selection above uses
+the 16x8 reference. Keep different machine configurations in separate complete
+checkouts because some generated libraries are shared within each checkout.
+The broader `riscv-tools` target also builds historical LLVM/Spike components
+that are unnecessary for this GCC-based setup.
 
 ### macOS (Apple Silicon and Intel)
 
-The repository pins a tested release from the authoritative
-[Verilator repository](https://github.com/verilator/verilator) and builds it
-from source. A GitHub SSH key is not required for this setup:
+This candidate selects the unchanged [Verilator 5.052 release](https://github.com/verilator/verilator/tree/ea338be98e1e838d3518809ce8899f85a009963c)
+and the compatible Replicant hierarchy guard. Mac qualification of the combined
+Linux PR stack is complete. The KK6 agent reports that the supplied 5.052 patches
+also passed validation; verification against the published commit identities is
+the remaining handoff check. Historical 5.050 evidence keeps its original pins.
+A GitHub SSH key is not required for this setup:
 
 ```sh
 mkdir -p ~/hammerblade
@@ -126,6 +153,13 @@ git -c url.https://github.com/.insteadOf=git@github.com: \
 gmake verilator-exe
 ./verilator/bin/verilator --version
 ```
+
+After updating submodules, repeat `gmake verilator-exe` even if an older binary
+exists. This target always descends into Verilator's incremental build. On
+Darwin, `--enable-light-debug LDFLAGS=-g0` avoids an expensive optional configure
+debug-symbol probe; `VERILATOR_CONFIGURE_ARGS` can override these tool-build
+arguments. They do not alter generated simulator optimization settings. Rebuild
+models and host libraries in separate destinations when changing tool versions.
 
 Build the customized GCC and newlib toolchain needed by the examples. This is
 the longest setup step:
@@ -143,16 +177,20 @@ Use `gmake -f llvm22.mk llvm22-install`; the historical `riscv-tools` LLVM
 installer targets an older Linux development environment and is not the
 LLVM 22 build path.
 
-On macOS, the execution model defaults to one Verilator worker thread:
+The default Proc+Endpoint hierarchy uses one simulator worker on both Linux
+and macOS:
 
 ```sh
 gmake exec.log
 ```
 
-Other hosts continue to default to 16 workers. Override the count explicitly,
-for example with `gmake VERILATOR_THREADS=4 exec.log`, after benchmarking the
-specific model. The selected count is stored with the generated execution
-model, and changing it automatically invalidates and rebuilds that model.
+Only flat execution retains the older OS-specific defaults. For a threading
+experiment, select it explicitly, for example
+`gmake VERILATOR_HIERARCHY=flat VERILATOR_THREADS=4 exec.log`, and benchmark the
+specific model. The [Verilator platform guide](bsg_replicant/libraries/platforms/bigblade-verilator/README.md)
+documents separate exec/profile/trace/debug builds. Waveform debug additionally
+needs LZ4 development files (`brew install lz4` on Mac). The experimental
+single-writer progress protocol is not included in this tool pin.
 
 
 ## Examples
