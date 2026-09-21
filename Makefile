@@ -136,10 +136,19 @@ share-ami: $(ISDIRTY_CHECK)
 		--user-ids $(CORNELL_USER_ID) $(UW_USER_ID)
 
 export VERILATOR_ROOT := $(abspath $(BLADERUNNER_ROOT)/verilator)
-verilator-exe: $(VERILATOR_ROOT)/bin/verilator_bin
-$(VERILATOR_ROOT)/bin/verilator_bin:
-	cd $(VERILATOR_ROOT) && autoconf && ./configure
+ifeq ($(shell uname),Darwin)
+# Avoid the optional configure probe's expensive linked debug-symbol step.
+# These are tool-build arguments, not simulator optimization flags.
+VERILATOR_CONFIGURE_ARGS ?= --enable-light-debug LDFLAGS=-g0
+endif
+.PHONY: verilator-exe
+# An existing binary may belong to an older submodule pin: always descend.
+verilator-exe:
+	cd $(VERILATOR_ROOT) && autoconf && ./configure $(VERILATOR_CONFIGURE_ARGS)
 	$(MAKE) -C $(VERILATOR_ROOT) verilator_exe
+
+$(VERILATOR_ROOT)/bin/verilator_bin: verilator-exe
+	@test -x $@
 
 clean:
 	rm -rf upload.json
